@@ -1,0 +1,39 @@
+:root {
+    --a-black: black;
+    --a-red: darkred;
+    --a-green: darkgreen;
+    --a-yellow: olive;
+    --a-blue: navy;
+    --a-magenta: purple;
+    --a-cyan: teal;
+    --a-white: silver;
+    --a-brightBlack: gray;
+    --a-brightRed: red;
+    --a-brightGreen: lime;
+    --a-brightYellow: yellow;
+    --a-brightBlue: blue;
+    --a-brightMagenta: fuchsia;
+    --a-brightCyan: cyan;
+    --a-brightWhite: white;
+    --t-bg: black;
+    --t-fg: white;
+}
+
+$t-fg: var(--t-fg);
+$t-bg: var(--t-bg);
+$black: var(--a-black);
+$red: var(--a-red);
+$green: var(--a-green);
+$yellow: var(--a-yellow);
+$blue: var(--a-blue);
+$magenta: var(--a-magenta);
+$cyan: var(--a-cyan);
+$white: var(--a-white);
+$bBlack: var(--a-brightBlack);
+$bRed: var(--a-brightRed);
+$bGreen: var(--a-brightGreen);
+$bYellow: var(--a-brightYellow);
+$bBlue: var(--a-brightBlue);
+$bMagenta: var(--a-brightMagenta);
+$bCyan: var(--a-brightCyan);
+$bWhite: var(--a-brightWhite);
