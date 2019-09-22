@@ -1,7 +1,7 @@
 <template>
   <pre class="terminal">
 <span class="b-prompt">you@home</span><span class="t-fg">:<span class="a-bBlue">~</span>$ ls -1</span>
-<div class="v-contents" v-for="(result, index) in lsResults" :key="index"><span class="lsResult" :id="`b-${result.code}`" :data-fg="result.eff != '01' ? result.fg : parseInt(result.fg.toString().replace(/^3/, '9'))" :data-bg="result.bg" :data-eff="result.eff">{{result.description}}</span>
+<div class="v-contents" v-for="(result, index) in lsResults" :key="index"><span class="lsResult" :id="`b-${result.code}`" :data-fg="result.fg" :data-bg="result.bg" :data-eff="result.eff">{{result.description}}</span>
 </div></pre>
 </template>
 
@@ -27,11 +27,13 @@ pre {
   padding: 1rem;
   counter-reset: lsResults;
   line-height: 1;
+  user-select: none;
 }
 
 .terminal {
   color: var(--t-fg);
   background-color: var(--t-bg);
+  grid-area: preview;
 }
 
 .t-fg {
@@ -56,9 +58,22 @@ pre {
 $foregrounds: (0: $t-fg, 30: $black, 31: $red, 32: $green, 33: $yellow, 34: $blue, 35: $magenta, 36: $cyan, 37: $white, 90: $bBlack, 91: $bRed, 92: $bGreen, 93: $bYellow, 94: $bBlue, 95: $bMagenta, 96: $bCyan);
 $backgrounds: (0: $t-bg, 40: $black, 41: $red, 42: $green, 43: $yellow, 44: $blue, 45: $magenta, 46: $cyan, 47: $white, 100: $bBlack, 101: $bRed, 102: $bGreen, 103: $bYellow, 104: $bBlue, 105: $bMagenta, 106: $bCyan, 107: $bWhite);
 
+@function toBright($index) {
+  $brighterIndex: $index + 8;
+  $newVal: nth($foregrounds, $brighterIndex);
+  @return $newVal;
+}
+
+// $i: 0;
 @each $key, $value in $foregrounds {
+  $i: index($foregrounds, $key $value);
   [data-fg="#{$key}"] {
     color: $value;
+  }
+  @if $i > 0 and $i < 9 {
+    [data-eff="01"][data-fg="#{$key}"] {
+      color: map-get($foregrounds, ($key + 60));
+    }
   }
 }
 
@@ -74,6 +89,10 @@ $backgrounds: (0: $t-bg, 40: $black, 41: $red, 42: $green, 43: $yellow, 44: $blu
 
 [data-eff="04"] {
   text-decoration: underline;
+}
+
+.lsResult.active::before {
+  content: counter(lsResults) " \27a7";
 }
 
 </style>
