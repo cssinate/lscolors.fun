@@ -1,6 +1,6 @@
 <template>
   <div>
-Scheme
+    Attributions
   </div>
 </template>
 

@@ -1,13 +1,16 @@
 <template>
   <tabs>
       <tab name="Set LS_COLORS scheme">
-          <Scheme />
+        <Scheme />
       </tab>
       <tab name="Set terminal theme">
-          <Theme />
+        <Theme />
       </tab>
       <tab name="FAQ">
-          <Faq />
+        <Faq />
+      </tab>
+      <tab name="Attributions">
+        <Attributions />
       </tab>
 </tabs>
 </template>
@@ -17,6 +20,7 @@
   import Faq from './FAQ'
   import Scheme from './SetScheme'
   import Theme from './SetTheme'
+  import Attributions from './Attributions'
 
   export default {
     components: {
@@ -24,7 +28,8 @@
       Tabs,
       Faq,
       Scheme,
-      Theme
+      Theme,
+      Attributions
     }
   }
 </script>
