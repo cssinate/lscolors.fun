@@ -1,6 +1,6 @@
 <template>
     <section class="lsItems">
-        <div class="lsItem" v-for="(result, index) in lsResults" :key="index">
+        <div class="lsItem" v-for="(result, index) in inodes" :key="index">
             <h2 class="lsItem_title">{{result.description}}</h2>
             <dt>Foreground:</dt><dd>{{numberToReadable(result.fg)}}</dd>
             <div class="colorPicker">
@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  props: ['lsResults'],
+  props: ['inodes'],
   data: function () {
     return {
       readableValue: {

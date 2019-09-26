@@ -4,6 +4,8 @@ import './registerServiceWorker'
 
 import './scss/main.scss'
 
+import { inodes as results } from './components/inodes.js'
+
 Vue.config.productionTip = false
 
 let currentScheme = ''
@@ -11,6 +13,7 @@ let currentScheme = ''
 new Vue({
   render: h => h(App),
   data: {
-    currentScheme: currentScheme
+    currentScheme: currentScheme,
+    inodes: results
   }
 }).$mount('#app')

@@ -2,18 +2,14 @@
   <section class="terminal">
     <span class="b-prompt">you@home</span><span class="t-fg">:<span class="a-bBlue">~</span>$ ls -1</span>
     <ol class="v-contents">
-      <li :class="{active: result.code == $root.$data.currentScheme}" class="lsResult" v-for="(result, index) in lsResults" :key="index" :id="`b-${result.code}`" :data-fg="result.fg" :data-bg="result.bg" :data-eff="result.eff">{{result.short ? result.short : result.description}}</li>
+      <li :class="{active: result.code == $root.$data.currentScheme}" class="inode" v-for="(result, index) in $root.$data.inodes" :key="index" :id="`b-${result.code}`" :data-fg="result.fg" :data-bg="result.bg" :data-eff="result.eff">{{result.short ? result.short : result.description}}</li>
     </ol>
   </section>
 </template>
 
 <script>
 export default {
-  props: {
-    lsResults: {
-      type: Array
-    }
-  }
+
 }
 </script>
 
@@ -43,7 +39,7 @@ export default {
   padding-left: 2em;
   padding-right: 2em;
   padding-bottom: 2em;
-  counter-reset: lsResults;
+  counter-reset: inodes;
   line-height: 1;
   user-select: none;
   overflow-y: auto;
@@ -54,14 +50,14 @@ export default {
   color: var(--t-fg);
 }
 
-.lsResult {
+.inode {
   list-style: none;
   width: min-content;
   position: relative;
 
   &::before {
-    counter-increment: lsResults;
-    content: counter(lsResults) " -";
+    counter-increment: inodes;
+    content: counter(inodes) " -";
     display: inline-block;
     width: 4ch;
     padding-right: 1ch;
@@ -116,7 +112,7 @@ $backgrounds: (0: $t-bg, 40: $black, 41: $red, 42: $green, 43: $yellow, 44: $blu
   text-decoration: underline;
 }
 
-.lsResult.active::after {
+.inode.active::after {
   content: '';
   display: inline-block;
   width: 1ch;
