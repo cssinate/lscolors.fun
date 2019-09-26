@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <Header />
-    <SchemePreview :ls-results="LsResults" />
-    <PageContent />
+    <SchemePreview :ls-results="lsResults" />
+    <PageContent :ls-results="lsResults" />
   </div>
 </template>
 
@@ -21,7 +21,7 @@ export default {
   },
   data () {
     return {
-      LsResults: results
+      lsResults: results
     }
   }
 }

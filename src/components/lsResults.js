@@ -1,5 +1,6 @@
 export let lsResults = [{
   code: 'no',
+  short: 'default',
   description: 'default/base styling',
   fg: 0,
   bg: 0,
@@ -21,6 +22,7 @@ export let lsResults = [{
 },
 {
   code: 'ln',
+  short: 'symlink',
   description: 'symbolic link',
   fg: 36,
   bg: 0,
@@ -35,6 +37,7 @@ export let lsResults = [{
 },
 {
   code: 'or',
+  short: 'broken symlink',
   description: 'broken symbolic link',
   fg: 31,
   bg: 40,
@@ -56,6 +59,7 @@ export let lsResults = [{
 },
 {
   code: 'bd',
+  short: 'block driver',
   description: 'block device driver',
   fg: 33,
   bg: 40,
@@ -63,6 +67,7 @@ export let lsResults = [{
 },
 {
   code: 'cd',
+  short: 'character driver',
   description: 'character device driver',
   fg: 33,
   bg: 40,
@@ -77,6 +82,7 @@ export let lsResults = [{
 },
 {
   code: 'su',
+  short: 'setuid file',
   description: 'setuid file (u+s)',
   fg: 37,
   bg: 41,
@@ -84,13 +90,15 @@ export let lsResults = [{
 },
 {
   code: 'sg',
-  description: 'setgit file (g+s)',
+  short: 'setgid file',
+  description: 'setgid file (g+s)',
   fg: 30,
   bg: 43,
   eff: '00'
 },
 {
   code: 'ca',
+  short: 'capability',
   description: 'file with capability',
   fg: 30,
   bg: 41,
@@ -98,6 +106,7 @@ export let lsResults = [{
 },
 {
   code: 'ex',
+  short: 'executable',
   description: 'executable file',
   fg: 32,
   bg: 0,
@@ -105,7 +114,8 @@ export let lsResults = [{
 },
 {
   code: 'mi',
-  description: 'missing file',
+  short: 'missing file',
+  description: 'non-existent file referenced by a symlink',
   fg: 0,
   bg: 0,
   eff: '00'
@@ -119,21 +129,24 @@ export let lsResults = [{
 },
 {
   code: 'ow',
-  description: 'dir, others can write(o+w)',
+  short: 'other-writable dir',
+  description: 'directory, others can write (o+w)',
   fg: 34,
   bg: 42,
   eff: '00'
 },
 {
   code: 'st',
-  description: 'dir, sticky (+t)',
+  short: 'sticky dir',
+  description: 'director with sticky bit (+t)',
   fg: 37,
   bg: 44,
   eff: '00'
 },
 {
   code: 'tw',
-  description: 'dir, sticky, others can write (+t,o+w)',
+  short: 'sticky o-w dir',
+  description: 'directory with sticky bit, others can write (+t,o+w)',
   fg: 30,
   bg: 42,
   eff: '00'

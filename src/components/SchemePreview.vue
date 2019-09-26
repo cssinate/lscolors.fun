@@ -1,13 +1,19 @@
 <template>
-  <pre class="terminal">
-<span class="b-prompt">you@home</span><span class="t-fg">:<span class="a-bBlue">~</span>$ ls -1</span>
-<div class="v-contents" v-for="(result, index) in lsResults" :key="index"><span class="lsResult" :id="`b-${result.code}`" :data-fg="result.fg" :data-bg="result.bg" :data-eff="result.eff">{{result.description}}</span>
-</div></pre>
+  <section class="terminal">
+    <span class="b-prompt">you@home</span><span class="t-fg">:<span class="a-bBlue">~</span>$ ls -1</span>
+    <ol class="v-contents">
+      <li :class="{active: result.code == $root.$data.currentScheme}" class="lsResult" v-for="(result, index) in lsResults" :key="index" :id="`b-${result.code}`" :data-fg="result.fg" :data-bg="result.bg" :data-eff="result.eff">{{result.short ? result.short : result.description}}</li>
+    </ol>
+  </section>
 </template>
 
 <script>
 export default {
-  props: ['lsResults']
+  props: {
+    lsResults: {
+      type: Array
+    }
+  }
 }
 </script>
 
@@ -22,18 +28,26 @@ export default {
   color: var(--a-brightBlue);
 }
 
-pre {
-  font-size: 1.3em;
-  padding: 1rem;
-  counter-reset: lsResults;
-  line-height: 1;
-  user-select: none;
-}
-
 .terminal {
+  font-family:
+    "SFMono-Regular",
+    "Liberation Mono",
+    Menlo,
+    Courier,
+    monospace;
+  font-size: 1.3em;
+  white-space: nowrap;
   color: var(--t-fg);
   background-color: var(--t-bg);
   grid-area: preview;
+  padding-left: 2em;
+  padding-right: 2em;
+  padding-bottom: 2em;
+  counter-reset: lsResults;
+  line-height: 1;
+  user-select: none;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .t-fg {
@@ -41,7 +55,10 @@ pre {
 }
 
 .lsResult {
-  display: inline-flex;
+  list-style: none;
+  width: min-content;
+  position: relative;
+
   &::before {
     counter-increment: lsResults;
     content: counter(lsResults) " -";
@@ -53,6 +70,14 @@ pre {
     color: var(--t-fg, white);
     font-weight: normal;
   }
+}
+
+.v-contents {
+  padding-left: 0;
+}
+
+.v-contents:last-child {
+  margin-bottom: 2em;
 }
 
 $foregrounds: (0: $t-fg, 30: $black, 31: $red, 32: $green, 33: $yellow, 34: $blue, 35: $magenta, 36: $cyan, 37: $white, 90: $bBlack, 91: $bRed, 92: $bGreen, 93: $bYellow, 94: $bBlue, 95: $bMagenta, 96: $bCyan);
@@ -91,19 +116,32 @@ $backgrounds: (0: $t-bg, 40: $black, 41: $red, 42: $green, 43: $yellow, 44: $blu
   text-decoration: underline;
 }
 
-.lsResult.active::before {
-  content: counter(lsResults) " \27a7";
+.lsResult.active::after {
+  content: '';
+  display: inline-block;
+  width: 1ch;
+  height: .3rem;
+  position: absolute;
+  top: calc(100% - .2rem);
+  left: calc(100% + .1rem);
+  animation: blink 1.5s steps(2, jump-none) infinite;
+  background-color: var(--a-brightGreen);
+}
+
+@keyframes blink {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 </style>
 
 <!--/*
 
-NOTE: Explain why bold makes bright!
-
-https://geoff.greer.fm/lscolors/
-
-https://gist.github.com/jmoz/28'0005/3dca508fb193b6ae5d1f4a3f21efc7d90ecb0bd'e
+https://gist.github.com/jmoz/280005/3dca508fb193b6ae5d1f4a3f21efc7d90ecb0bde
 
 # di=5;34;43 Setting the LS_COLORS di parameter to the above example will make directories appear in flashing blue text with an orange background
 #0 =  Default Colour

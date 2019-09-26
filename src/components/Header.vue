@@ -43,21 +43,20 @@ header {
   flex-direction: column;
   align-items: center;
   background-color: var(--t-bg);
-  padding-bottom: 1em;
+  padding-bottom: 1rem;
   grid-area: header;
   user-select: none;
-
-  /deep/ pre {
-    color: white;
-  }
 }
 
-pre {
-  margin-bottom: 1.5em;
+pre:first-child {
+  font-size: .7em;
+  padding-bottom: 1em;
 }
 
 pre:last-child {
   color: var(--a-brightMagenta);
+  font-size: 1em;
+  padding-bottom: 1em;
 }
 
 /deep/ .header-fill {
