@@ -1,0 +1,42 @@
+@mixin effect($code) {
+    @if $code == '01' {
+        font-weight: bold;
+    }
+    @if $code == '04' {
+        text-decoration: underline;
+    }
+}
+
+@function toBright($index) {
+    $brighterIndex: $index + 8;
+    $newVal: nth($foregrounds, $brighterIndex);
+    @return $newVal;
+  }
+  
+@each $key, $value in $foregrounds {
+    $i: index($foregrounds, $key $value);
+    .inode[data-fg="#{$key}"] {
+        color: $value;
+    }
+
+    .color[data-applied="#{$key}"] {
+        background-color: $value;
+    }
+    // If the foreground color is one of the dark colors and the bold effect is on,
+    // it will turn to the bright version of that color.
+    @if $i > 1 and $i < 10 {
+        .inode[data-eff="01"][data-fg="#{$key}"] {
+            color: map-get($foregrounds, ($key + 60));
+        }
+    }
+}
+
+@each $key, $value in $backgrounds {
+    .inode[data-bg="#{$key}"] {
+        background-color: $value;
+    }
+
+    .color[data-applied="#{$key}"] {
+        background-color: $value;
+    }
+}

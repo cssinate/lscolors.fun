@@ -1,9 +1,8 @@
-
   .tabs-component-tabs {
-    border: solid 1px #ddd;
-    border-radius: 6px;
-    margin-bottom: 5px;
-    padding-left: 0;
+    margin-bottom: 0;
+    padding-left: 3px;
+    margin-block-start: 0;
+    background-color: var(--t-bg);
   }
   
   @media (min-width: 700px) {
@@ -12,28 +11,45 @@
       align-items: stretch;
       display: flex;
       justify-content: flex-start;
-      margin-bottom: -1px;
     }
   }
   
   .tabs-component-tab {
-    color: #999;
+    border-right: solid 3px var(--t-bg);
+    border-left: solid 3px var(--t-bg);
+    border-bottom: solid 3px var(--t-bg);
+    background-color: var(--t-bg);
+    color: var(--t-fg);
+    opacity: .75;
     font-size: 14px;
     font-weight: 600;
     margin-right: 0;
     list-style: none;
+    box-shadow: inset 0 3px 0 var(--t-bg);
+    transition: box-shadow .2s ease-in;
+    
+    &:first-child {
+      border-left: 0;
+    }
   }
   
-  .tabs-component-tab:not(:last-child) {
-    border-bottom: dotted 1px #ddd;
-  }
-  
-  .tabs-component-tab:hover {
-    color: #666;
+  .tabs-component-tab:not(.is-active):hover,
+  .tabs-component-tab:not(.is-active):focus-within {
+    opacity: 1;
+    box-shadow: inset 0 3px 0 var(--t-fg);
   }
   
   .tabs-component-tab.is-active {
-    color: #000;
+    background-color: var(--t-fg);
+    color: var(--t-bg);
+    border-bottom: 0;
+    opacity: 1;
+    box-shadow: inset 0 0 0 var(--t-fg);
+    cursor: default;
+
+    .tabs-component-tab-a {
+      opacity: 1;
+    }
   }
   
   .tabs-component-tab.is-disabled * {
@@ -43,18 +59,10 @@
   
   @media (min-width: 700px) {
     .tabs-component-tab {
-      background-color: #fff;
-      border: solid 1px #ddd;
-      border-radius: 3px 3px 0 0;
       margin-right: .5em;
-      transform: translateY(2px);
-      transition: transform .3s ease;
     }
   
     .tabs-component-tab.is-active {
-      border-bottom: solid 1px #fff;
-      z-index: 2;
-      transform: translateY(0);
     }
   }
   
@@ -64,20 +72,20 @@
     display: flex;
     padding: .75em 1em;
     text-decoration: none;
+    
+    &:focus {
+      outline: 0;
+    }
   }
   
   .tabs-component-panels {
-    padding: 4em 0;
+    padding: 1em 0;
   }
   
   @media (min-width: 700px) {
     .tabs-component-panels {
-      border-top-left-radius: 0;
       background-color: #fff;
-      border: solid 1px #ddd;
-      border-radius: 0 6px 6px 6px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, .05);
-      padding: 4em 2em;
+      padding: 1em 1em 1em 0;
     }
   }
   

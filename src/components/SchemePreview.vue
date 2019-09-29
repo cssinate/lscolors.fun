@@ -20,6 +20,7 @@ export default {
 }
 
 @import '../scss/vars';
+
 .a-bBlue {
   color: var(--a-brightBlue);
 }
@@ -76,34 +77,6 @@ export default {
   margin-bottom: 2em;
 }
 
-$foregrounds: (0: $t-fg, 30: $black, 31: $red, 32: $green, 33: $yellow, 34: $blue, 35: $magenta, 36: $cyan, 37: $white, 90: $bBlack, 91: $bRed, 92: $bGreen, 93: $bYellow, 94: $bBlue, 95: $bMagenta, 96: $bCyan);
-$backgrounds: (0: $t-bg, 40: $black, 41: $red, 42: $green, 43: $yellow, 44: $blue, 45: $magenta, 46: $cyan, 47: $white, 100: $bBlack, 101: $bRed, 102: $bGreen, 103: $bYellow, 104: $bBlue, 105: $bMagenta, 106: $bCyan, 107: $bWhite);
-
-@function toBright($index) {
-  $brighterIndex: $index + 8;
-  $newVal: nth($foregrounds, $brighterIndex);
-  @return $newVal;
-}
-
-// $i: 0;
-@each $key, $value in $foregrounds {
-  $i: index($foregrounds, $key $value);
-  [data-fg="#{$key}"] {
-    color: $value;
-  }
-  @if $i > 0 and $i < 9 {
-    [data-eff="01"][data-fg="#{$key}"] {
-      color: map-get($foregrounds, ($key + 60));
-    }
-  }
-}
-
-@each $key, $value in $backgrounds {
-  [data-bg="#{$key}"] {
-    background-color: $value;
-  }
-}
-
 [data-eff="01"] {
   font-weight: bold;
 }
@@ -126,10 +99,10 @@ $backgrounds: (0: $t-bg, 40: $black, 41: $red, 42: $green, 43: $yellow, 44: $blu
 
 @keyframes blink {
   from {
-    opacity: 0;
+    opacity: 1;
   }
   to {
-    opacity: 1;
+    opacity: 0;
   }
 }
 

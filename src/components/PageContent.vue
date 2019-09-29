@@ -1,5 +1,5 @@
 <template>
-  <tabs>
+  <tabs :options="{ useUrlFragment: false }" @changed="clearScheme">
       <tab name="Set LS_COLORS scheme">
         <Scheme />
       </tab>
@@ -30,6 +30,15 @@ export default {
     Scheme,
     Theme,
     Attributions
+  },
+  methods: {
+    clearScheme (selectedTab) {
+      if (selectedTab.tab.name !== 'Set LS_COLORS scheme') {
+        this.$root.$data.currentScheme = ''
+      } else {
+        this.$root.$data.currentScheme = 'no'
+      }
+    }
   }
 }
 </script>

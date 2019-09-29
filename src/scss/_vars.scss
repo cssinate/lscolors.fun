@@ -17,8 +17,13 @@
     --a-brightWhite: white;
     --t-bg: rgb(21, 31, 37);
     --t-fg: white;
+
+    --p-link: hsl(212, 66%, 49%);
 }
 
+
+$t-no-fg: var(--t-fg);
+$t-no-bg: var(--t-bg);
 $t-fg: var(--t-fg);
 $t-bg: var(--t-bg);
 $black: var(--a-black);
@@ -37,3 +42,8 @@ $bBlue: var(--a-brightBlue);
 $bMagenta: var(--a-brightMagenta);
 $bCyan: var(--a-brightCyan);
 $bWhite: var(--a-brightWhite);
+
+$foregrounds: ('00': $t-no-fg, 0: $t-fg, 30: $black, 31: $red, 32: $green, 33: $yellow, 34: $blue, 35: $magenta, 36: $cyan, 37: $white, 90: $bBlack, 91: $bRed, 92: $bGreen, 93: $bYellow, 94: $bBlue, 95: $bMagenta, 96: $bCyan);
+$backgrounds: ('00': $t-no-bg, 0: transparent, 40: transparent, 41: $red, 42: $green, 43: $yellow, 44: $blue, 45: $magenta, 46: $cyan, 47: $white, 100: $bBlack, 101: $bRed, 102: $bGreen, 103: $bYellow, 104: $bBlue, 105: $bMagenta, 106: $bCyan, 107: $bWhite);
+
+@import 'mixins';
