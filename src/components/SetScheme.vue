@@ -10,13 +10,13 @@
         {{result.description}}
       </span>
       <div class="changers" v-if="$root.$data.currentScheme == result.code">
-        <button @click="openFg($event, result.code)"
+        <button @click="openPopup('fg', $event, index, result.fg, inodesCopy[index])"
                 class="change color fg"
                 :data-applied="result.fg" />
-        <button @click="openBg($event, result.code)"
+        <button @click="openBg($event, index)"
                 class="change color bg"
                 :data-applied="result.bg" />
-        <button @click="openEff($event, result.code)"
+        <button @click="openEff($event, index)"
                 class="change effect"
                 :data-applied="result.eff" />
       </div>
@@ -28,11 +28,12 @@
 import Vue from 'vue'
 import ColorPopup from './ColorPopup'
 
-const popup = Vue.extend(ColorPopup)
+const Popup = Vue.extend(ColorPopup)
 
 export default {
   name: 'SetScheme',
   components: {
+    // eslint-disable-next-line
     ColorPopup
   },
   data () {
@@ -48,15 +49,18 @@ export default {
     selectInode (code) {
       this.$root.$data.currentScheme = code
     },
-    openFg (event, code) {
+    openPopup (type, event, code, initial, defaults) {
       let panel = this.$refs.allInodes
-      var newPopup = new popup({
+      var newPopup = new Popup({
         propsData: {
-          tiles: 'fg'
+          tiles: 'fg',
+          inodeIndex: code,
+          initialValue: initial,
+          defaults: defaults
         }
       })
       newPopup.$mount()
-      panel.appendChild(newPopup.$el)
+      panel.insertBefore(newPopup.$el, panel.childNodes[0])
     },
     openBg (event, code) {
 
@@ -146,7 +150,7 @@ button:not([class]) {
   display: contents;
 
   span {
-    height: 1.5em;
+    min-height: 1.5em;
     display: flex;
     align-items: center;
     display: inline-flex;
@@ -171,7 +175,7 @@ section {
   border: solid 1px var(--t-bg);
 
   &.color[data-applied="0"] {
-    background-image: linear-gradient(45deg, white 0%, white 45%, red 45%, red 55%, white 55%, white 100%);
+    background-image: $clear;
   }
 
   &.effect[data-applied="00"]:after {

@@ -22,6 +22,10 @@
     .color[data-applied="#{$key}"] {
         background-color: $value;
     }
+
+    .popup-tile[data-output="#{$key}"] {
+        background-color: $value;
+    }
     // If the foreground color is one of the dark colors and the bold effect is on,
     // it will turn to the bright version of that color.
     @if $i > 1 and $i < 10 {
@@ -37,6 +41,10 @@
     }
 
     .color[data-applied="#{$key}"] {
+        background-color: $value;
+    }
+
+    .popup-tile[data-output="#{$key}"] {
         background-color: $value;
     }
 }
