@@ -1,6 +1,6 @@
 <template>
   <section>
-    <color-popup @editing="closePopup" @current-color="receiveEmission($event)" v-if="editing" :editing="editing" />
+    <color-popup @current-color="receiveEmission($event)" @hide-tip="hideTip = true" v-if="editing" :editing="editing" />
     <h2 class="description" style="grid-row: 1;">Description</h2>
     <div class="changers" style="grid-row: 1;">
       <h2>FG</h2>
@@ -14,16 +14,19 @@
         {{result.description}}
       </span>
       <div class="changers"
-           :style="`grid-row: ${index + 2}`">
-        <button @click="setEditing('fg', result.fg, index, inodesCopy[index])"
+           :style="`grid-row: ${index + 2}`"
+           >
+        <button @click="setEditing('fg', result.fg, index)"
                 class="change color fg"
                 :class="{ editing: editing != null && index == editing.index && editing.representing == 'fg'}"
-                :data-applied="result.fg" />
-        <button @click="setEditing('bg', result.bg, index, inodesCopy[index])"
+                :data-applied="result.fg"
+                @focus="$root.$data.currentScheme = result.code"
+                @blur="evalCurrentScheme" />
+        <button @click="setEditing('bg', result.bg, index)"
                 class="change color bg"
                 :class="{ editing: editing != null && index == editing.index && editing.representing == 'bg'}"
                 :data-applied="result.bg" />
-        <button @click="setEditing('eff', result.eff, index, inodesCopy[index])"
+        <button @click="setEditing('eff', result.eff, index)"
                 class="change effect"
                 :class="{ editing: editing != null && index == editing.index && editing.representing == 'eff' }"
                 :data-applied="result.eff" />
@@ -35,6 +38,8 @@
 
 <script>
 import ColorPopup from './ColorPopup'
+// import { inodes as inodesCopy } from './inodes.js'
+
 
 export default {
   name: 'SetScheme',
@@ -44,42 +49,31 @@ export default {
   },
   data () {
     return {
-      inodesCopy: [],
+      // inodesCopy: inodesCopy,
       editing: null,
       representing: null,
       currentValue: null,
-      defaults: null
+      hideTip: false
     }
   },
   methods: {
-    selectInode (code) {
-      this.$root.$data.currentScheme = code
-    },
     receiveEmission (event) {
       this.$root.$data.inodes[event.index][event.representing] = event.color
-      console.log(event)
     },
-    setEditing (representing, currentValue, index, defaults) {
+    setEditing (representing, currentValue, index) {
       if (this.editing) {
         this.editing = null
       }
       this.$nextTick(() => {
-        this.editing = { representing: representing, currentValue: currentValue, defaults: defaults, index: index }
+        this.editing = { representing: representing, currentValue: currentValue, index: index }
         this.$root.$data.currentScheme = this.$root.$data.inodes[index].code
       })
     },
-    closePopup () {
-      this.editing = null
-    },
-    openBg (event, code) {
-
-    },
-    openEff (event, code) {
-
+    evalCurrentScheme() {
+      if (!this.editing) {
+        this.$root.$data.$currentScheme = null
+      }
     }
-  },
-  mounted: function () {
-    this.inodesCopy = JSON.parse(JSON.stringify(this.$root.$data.inodes))
   }
 }
 </script>

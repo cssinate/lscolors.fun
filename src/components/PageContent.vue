@@ -2,7 +2,7 @@
   <main>
     <tabs :options="{ useUrlFragment: false }" @changed="clearScheme">
       <tab class="tab tab-scheme" name="Set LS_COLORS scheme">
-          <Scheme />
+          <Scheme ref="setScheme" />
           <SchemePreview />
       </tab>
       <tab class="tab" name="Set terminal theme">
@@ -40,12 +40,9 @@ export default {
     SchemePreview
   },
   methods: {
-    clearScheme (selectedTab) {
-      if (selectedTab.tab.name !== 'Set LS_COLORS scheme') {
-        this.$root.$data.currentScheme = ''
-      } else {
-        this.$root.$data.currentScheme = 'no'
-      }
+    clearScheme () {
+      this.$root.$data.currentScheme = null
+      this.$refs.setScheme.editing = null
     }
   }
 }

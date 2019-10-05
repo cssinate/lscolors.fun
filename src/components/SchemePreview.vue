@@ -71,7 +71,7 @@ export default {
   width: min-content;
   position: relative;
   height: 1em;
-  margin: 0 .5em;
+  margin: 0 1.25rem 0 .5rem;
 }
 
 .v-contents {

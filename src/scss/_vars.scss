@@ -1,22 +1,22 @@
 :root {
-    --a-black: black;
-    --a-red: darkred;
-    --a-green: darkgreen;
-    --a-yellow: olive;
-    --a-blue: navy;
-    --a-magenta: purple;
-    --a-cyan: teal;
-    --a-white: silver;
-    --a-brightBlack: gray;
-    --a-brightRed: red;
-    --a-brightGreen: lime;
-    --a-brightYellow: yellow;
-    --a-brightBlue: blue;
-    --a-brightMagenta: fuchsia;
-    --a-brightCyan: cyan;
-    --a-brightWhite: white;
-    --t-bg: rgb(21, 31, 37);
-    --t-fg: white;
+    --a-black: #000000;
+    --a-red: #800000;
+    --a-green: #008000;
+    --a-yellow: #808000;
+    --a-blue: #000080;
+    --a-magenta: #800080;
+    --a-cyan: #008080;
+    --a-white: #c0c0c0;
+    --a-brightBlack: #808080;
+    --a-brightRed: #ff0000;
+    --a-brightGreen: #00ff00;
+    --a-brightYellow: #ffff00;
+    --a-brightBlue: #0000ff;
+    --a-brightMagenta: #ff00ff;
+    --a-brightCyan: #00ffff;
+    --a-brightWhite: #ffffff;
+    --t-bg: #151f25;
+    --t-fg: #ffffff;
 
     --p-link: hsl(212, 66%, 49%);
 }

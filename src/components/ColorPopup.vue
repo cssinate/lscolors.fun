@@ -1,22 +1,41 @@
 <template>
-  <div class="container" tabindex="-1" v-focus @keydown.esc="$parent.editing = null">
+  <div class="container"
+       :class="{bright: representing === 'fg' && checkBold}"
+       @keydown.esc="$parent.editing = null">
     <label :data-output="tile"
             v-for="(tile, index) in tileSet"
             :key="index"
-            :class="[{default: tile === defaults[representing], selected: tile === currentColor}, representing]"
+            :class="[{default: tile == defaults[representing], selected: tile == currentColor}, representing]"
             class="popup-tile"
             v-on:change="emitColor(callerIndex, representing, currentColor)"
             :title="getTitle(tile, representing)"
             >
       <input type="radio"
             :value="tile"
-            v-model="currentColor">
+            v-model="currentColor"
+            v-if="tile == defaults[representing]"
+            v-focus>
+      <input type="radio"
+            :value="tile"
+            v-model="currentColor"
+            v-else>
     </label>
-    <button class="popup-tile done" @click="emitDone"></button>
+    <button class="popup-tile done" @click="closePopup"></button>
+    <aside class="boldInfo" v-if="checkBold && !hideTip">
+      <header>
+        <h3>FYI</h3>
+        <svg viewBox="0 0 14 14" @click="emitHideTip()">
+          <line x1="4" y1="4" x2="10" y2="10" />
+          <line x1="10" y1="4" x2="4" y2="10" />
+        </svg>
+      </header>
+      <p>Dark colors will render as bright in the terminal if the Bold effect is applied.</p>
+    </aside>
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'ColorPopup',
   props: {
@@ -24,21 +43,24 @@ export default {
       type: Object,
       required: true
     }
-    // tiles: {
-    //   type: String,
-    //   required: true
-    // },
-    // initialValue: null,
-    // defaults: Object,
-    // orientation: String
   },
   data () {
     return {
       tileSet: [],
       representing: this.editing.representing,
       currentColor: this.editing.currentValue,
-      defaults: this.editing.defaults,
-      callerIndex: this.editing.index
+      callerIndex: this.editing.index,
+      defaults: null,
+      hideTip: this.$parent.hideTip
+    }
+  },
+  computed: {
+    checkBold () {
+      if (this.defaults && this.defaults.eff === "01") {
+        return true
+      } else {
+        return false
+      }
     }
   },
   directives: {
@@ -52,6 +74,7 @@ export default {
     }
   },
   mounted: function () {
+    this.defaults = this.$root.$data.inodesDefault[this.callerIndex]
     if (this.representing === 'fg') {
       this.tileSet = ['0', '30', '31', '32', '33', '34', '35', '36', '37', '90', '91', '92', '93', '94', '95', '96', '97']
       this.representing = 'fg'
@@ -68,15 +91,16 @@ export default {
   },
   methods: {
     getTitle (tile, representing) {
-      if (tile === this.defaults[this.representing]) {
+      if (tile == this.defaults[this.representing]) {
         return 'This is the default value'
       }
     },
     emitColor (index, representing, color) {
       this.$emit('current-color', { index: index, representing: representing, color: color })
     },
-    emitDone () {
-      this.$emit('editing')
+    emitHideTip () {
+      this.$emit('hide-tip')
+      this.hideTip = true
     },
     getRows (height) {
       if (this.callerIndex + height <= this.$root.$data.inodes.length) {
@@ -87,6 +111,10 @@ export default {
         document.documentElement.style.setProperty('--popup-row-end', this.callerIndex + 2)
       }
     },
+    closePopup () {
+      document.querySelector(`[data-code="${this.defaults.code}"] .change.${this.representing}`).focus()
+      this.$parent.editing = null
+    }
   }
 }
 </script>
@@ -94,6 +122,32 @@ export default {
 <style scoped lang="scss">
 
 @import '../scss/vars';
+
+  .boldInfo {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: var(--t-bg);
+    padding: 1rem;
+
+    header {
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    svg {
+      height: 1.5rem;
+      width: 1.5rem;
+      stroke: var(--t-fg);
+      cursor: pointer;
+    }
+
+    p {
+      width: 20ch;
+    }
+  }
 
   .container {
     grid-column: 2 / 3;
@@ -116,9 +170,19 @@ export default {
     border: solid 1px currentColor;
     height: calc(100% - .75rem);
     width: calc(100% - .75rem);
+    position: relative;
 
-    &.default {
-      border: dotted 2px var(--t-fg);
+    &.default::before {
+      content: '*';
+      position: absolute;
+      top: .5rem;
+      right: .5rem;
+      height: 0;
+      width: 0;
+      text-shadow: 1px 1px 0 var(--t-bg), -1px -1px 0 var(--t-bg), -1px 1px 0 var(--t-bg), 1px -1px 0 var(--t-bg),;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     &:focus-within {
       outline: dashed 2px var(--t-fg);
