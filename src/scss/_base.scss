@@ -4,10 +4,9 @@ body {
     "Ubuntu", "Cantarell", "Fira Sans",
     "Droid Sans", "Helvetica Neue", sans-serif;
   margin: 0;
-  height: 100vh;
+  min-height: 100vh;
   display: grid;
-  grid-template-areas: "header header" "preview tabs";
-  grid-template-columns: auto 1fr;
+  grid-template-areas: "header" "content";
   grid-template-rows: auto 1fr;
   background-color: var(--t-fg);
   color: var(--t-bg);

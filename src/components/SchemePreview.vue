@@ -1,9 +1,17 @@
 <template>
   <section class="terminal">
-    <span class="b-prompt">you@home</span><span class="t-fg">:<span class="a-bBlue">~</span>$ ls -1</span>
-    <ol class="v-contents">
-      <li :class="{active: result.code == $root.$data.currentScheme}" class="inode" v-for="(result, index) in $root.$data.inodes" :key="index" :id="`b-${result.code}`" :data-fg="result.fg" :data-bg="result.bg" :data-eff="result.eff">{{result.short ? result.short : result.description}}</li>
-    </ol>
+    <div class="preview-bg"></div>
+    <div class="b-prompt">you@home<span class="t-fg">:<span class="a-bBlue">~</span>$ ls -1</span></div>
+    <div v-for="(result, index) in $root.$data.inodes"
+         :key="index" :class="{active: result.code == $root.$data.currentScheme}"
+         :style="`grid-row: ${index + 2}`"
+         class="inode"
+         :id="`b-${result.code}`"
+         :data-fg="result.fg"
+         :data-bg="result.bg"
+         :data-eff="result.eff">
+      {{result.short ? result.short : result.description}}
+    </div>
   </section>
 </template>
 
@@ -14,18 +22,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../scss/vars';
+
 .b-prompt {
   color: var(--a-brightGreen);
   font-weight: bold;
+  grid-row: 1;
+  padding-left: .5em;
 }
 
-@import '../scss/vars';
+.preview-bg {
+  grid-column: -1;
+  grid-row: 1 / -1;
+  background-color: var(--t-bg);
+  height: 100%;
+  margin: 0;
+}
 
 .a-bBlue {
   color: var(--a-brightBlue);
 }
 
 .terminal {
+  display: contents;
+}
+
+.terminal > * {
+  grid-column: 3 / 4;
   font-family:
     "SFMono-Regular",
     "Liberation Mono",
@@ -34,17 +57,8 @@ export default {
     monospace;
   font-size: 1.3em;
   white-space: nowrap;
-  color: var(--t-fg);
-  background-color: var(--t-bg);
-  grid-area: preview;
-  padding-left: 2em;
-  padding-right: 2em;
-  padding-bottom: 2em;
-  counter-reset: inodes;
-  line-height: 1;
+  align-self: center;
   user-select: none;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .t-fg {
@@ -52,21 +66,12 @@ export default {
 }
 
 .inode {
+  color: var(--t-fg);
   list-style: none;
   width: min-content;
   position: relative;
-
-  &::before {
-    counter-increment: inodes;
-    content: counter(inodes) " -";
-    display: inline-block;
-    width: 4ch;
-    padding-right: 1ch;
-    text-align: right;
-    background-color: var(--t-bg, black);
-    color: var(--t-fg, white);
-    font-weight: normal;
-  }
+  height: 1em;
+  margin: 0 .5em;
 }
 
 .v-contents {

@@ -1,34 +1,40 @@
 <template>
-  <section ref="allInodes">
+  <section>
+    <color-popup @editing="closePopup" @current-color="receiveEmission($event)" v-if="editing" :editing="editing" />
+    <h2 class="description" style="grid-row: 1;">Description</h2>
+    <div class="changers" style="grid-row: 1;">
+      <h2>FG</h2>
+      <h2>BG</h2>
+      <h2>Eff</h2>
+    </div>
     <div class="inode" v-for="(result, index) in $root.$data.inodes" :key="index" :data-code="result.code">
-      <span tabindex="0"
-            class="description"
+      <span class="description"
             :class="{selected: $root.$data.currentScheme == result.code}"
-            @click="selectInode(result.code)"
-            @keyup.space="selectInode(result.code)"
-            @keyup.enter="selectInode(result.code)">
+            :style="`grid-row: ${index + 2}`">
         {{result.description}}
       </span>
-      <div class="changers" v-if="$root.$data.currentScheme == result.code">
-        <button @click="openPopup('fg', $event, index, result.fg, inodesCopy[index])"
+      <div class="changers"
+           :style="`grid-row: ${index + 2}`">
+        <button @click="setEditing('fg', result.fg, index, inodesCopy[index])"
                 class="change color fg"
+                :class="{ editing: editing != null && index == editing.index && editing.representing == 'fg'}"
                 :data-applied="result.fg" />
-        <button @click="openBg($event, index)"
+        <button @click="setEditing('bg', result.bg, index, inodesCopy[index])"
                 class="change color bg"
+                :class="{ editing: editing != null && index == editing.index && editing.representing == 'bg'}"
                 :data-applied="result.bg" />
-        <button @click="openEff($event, index)"
+        <button @click="setEditing('eff', result.eff, index, inodesCopy[index])"
                 class="change effect"
+                :class="{ editing: editing != null && index == editing.index && editing.representing == 'eff' }"
                 :data-applied="result.eff" />
       </div>
+
     </div>
   </section>
 </template>
 
 <script>
-import Vue from 'vue'
 import ColorPopup from './ColorPopup'
-
-const Popup = Vue.extend(ColorPopup)
 
 export default {
   name: 'SetScheme',
@@ -38,29 +44,32 @@ export default {
   },
   data () {
     return {
-      gridHeaders: `
-      <h2 class="header fg"><abbr title="foreground">FG</abbr></h2>
-      <h2 class="header bg"><abbr title="background">BG</abbr></h2>
-      <h2 class="header effect"><abbr title="effect">Eff</abbr></h2>`,
-      inodesCopy: []
+      inodesCopy: [],
+      editing: null,
+      representing: null,
+      currentValue: null,
+      defaults: null
     }
   },
   methods: {
     selectInode (code) {
       this.$root.$data.currentScheme = code
     },
-    openPopup (type, event, code, initial, defaults) {
-      let panel = this.$refs.allInodes
-      var newPopup = new Popup({
-        propsData: {
-          tiles: 'fg',
-          inodeIndex: code,
-          initialValue: initial,
-          defaults: defaults
-        }
+    receiveEmission (event) {
+      this.$root.$data.inodes[event.index][event.representing] = event.color
+      console.log(event)
+    },
+    setEditing (representing, currentValue, index, defaults) {
+      if (this.editing) {
+        this.editing = null
+      }
+      this.$nextTick(() => {
+        this.editing = { representing: representing, currentValue: currentValue, defaults: defaults, index: index }
+        this.$root.$data.currentScheme = this.$root.$data.inodes[index].code
       })
-      newPopup.$mount()
-      panel.insertBefore(newPopup.$el, panel.childNodes[0])
+    },
+    closePopup () {
+      this.editing = null
     },
     openBg (event, code) {
 
@@ -79,93 +88,55 @@ export default {
 
 @import '../scss/vars';
 
-button:not([class]) {
-  color: var(--p-link);
-  cursor: pointer;
-
-  &:focus {
-    text-decoration: underline;
-  }
-}
-
-.description {
-  grid-column: 1;
-  width: auto;
-  padding-right: 1em;
-  display: flex;
-  border-left-width: 3px;
-  border-left-style: solid;
-  border-left-color: var(--t-bg);
-  margin-left: -3px;
-  padding-left: calc(1em + 3px);
-  transition: margin-left .3s ease-out, padding-left .3s ease-out;
-
-  &::after {
-    min-width: 2em;
-    content: '';
-    flex: 1;
-    margin-left: 1.5em;
-    border-bottom: dashed 2px currentColor;
-    opacity: 0;
-  }
-
-  &:hover, &:focus {
-    border-left-width: 3px;
-    padding-left: 1em;
-    margin-left: 0;
-    outline: 0;
-  }
-
-  &.selected {
-    padding-left: 1em;
-    margin-left: 0;
-  }
-
-  &.selected::after {
-    opacity: .5;
-  }
-}
-
-.description, .change {
-  cursor: pointer;
-}
-
-.changers {
+section {
   display: contents;
 }
 
-.change.fg {
-  grid-column: 2;
+h2 {
+  font-size: 1.2em;
+  text-align: right;
+  margin: .5rem 0;
 }
 
-.change.bg {
-  grid-column: 3;
+.description {
+  grid-column: 1 / 2;
+  width: auto;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  word-break: break-word;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+
+  &.selected {
+    font-weight: bold;
+  }
 }
 
-.change.effect {
-  grid-column: 4;
+.change {
+  cursor: pointer;
+}
+
+.editing {
+  outline: solid .25rem var(--t-bg);
+}
+
+.changers {
+  grid-column: 2 /3;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-gap: .5rem;
+  align-items: center;
+  padding: 0 .5rem;
+
+  h2 {
+    width: 0;
+  }
 }
 
 .inode {
   display: contents;
-
-  span {
-    min-height: 1.5em;
-    display: flex;
-    align-items: center;
-    display: inline-flex;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-all;
-    word-break: break-word;
-  }
-}
-
-section {
-  display: inline-grid;
-  align-items: center;
-  grid-template-columns: 1fr repeat(3, 5ch) auto;
-  position: relative;
 }
 
 .change {

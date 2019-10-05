@@ -1,18 +1,24 @@
 <template>
-  <tabs :options="{ useUrlFragment: false }" @changed="clearScheme">
-      <tab name="Set LS_COLORS scheme">
-        <Scheme />
+  <main>
+    <tabs :options="{ useUrlFragment: false }" @changed="clearScheme">
+      <tab class="tab tab-scheme" name="Set LS_COLORS scheme">
+          <Scheme />
+          <SchemePreview />
       </tab>
-      <tab name="Set terminal theme">
+      <tab class="tab" name="Set terminal theme">
         <Theme />
+        <SchemePreview />
       </tab>
-      <tab name="FAQ">
+      <tab class="tab" name="FAQ">
         <Faq />
+        <SchemePreview />
       </tab>
-      <tab name="Attributions">
+      <tab class="tab" name="Attributions">
         <Attributions />
+        <SchemePreview />
       </tab>
-</tabs>
+    </tabs>
+  </main>
 </template>
 
 <script>
@@ -21,6 +27,7 @@ import Faq from './FAQ'
 import Scheme from './SetScheme'
 import Theme from './SetTheme'
 import Attributions from './Attributions'
+import SchemePreview from './SchemePreview'
 
 export default {
   components: {
@@ -29,7 +36,8 @@ export default {
     Faq,
     Scheme,
     Theme,
-    Attributions
+    Attributions,
+    SchemePreview
   },
   methods: {
     clearScheme (selectedTab) {
@@ -44,5 +52,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .tab {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 2.2rem repeat(20, 2rem) 1fr;
+    grid-auto-flow: column;
 
+    &:not(.tab-scheme) > * {
+      grid-row: 1 / -1;
+    }
+  }
+
+  .tab-scheme {
+    display: grid;
+    grid-template-columns: auto repeat(3, min-content);
+  }
 </style>

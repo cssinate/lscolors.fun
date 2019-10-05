@@ -1,17 +1,16 @@
   .tabs-component-tabs {
     margin-bottom: 0;
-    padding-left: 3px;
+    padding-right: .5rem;
     margin-block-start: 0;
     background-color: var(--t-bg);
+    display: flex;
+    justify-content: flex-end;
   }
   
-  @media (min-width: 700px) {
-    .tabs-component-tabs {
-      border: 0;
-      align-items: stretch;
-      display: flex;
-      justify-content: flex-start;
-    }
+  .tabs-component {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr;
   }
   
   .tabs-component-tab {
@@ -33,59 +32,42 @@
     }
   }
   
+  .tabs-component-panel {
+    height: 100%;
+  }
+  
   .tabs-component-tab:not(.is-active):hover,
   .tabs-component-tab:not(.is-active):focus-within {
     opacity: 1;
     box-shadow: inset 0 3px 0 var(--t-fg);
   }
   
-  .tabs-component-tab.is-active {
-    background-color: var(--t-fg);
-    color: var(--t-bg);
-    border-bottom: 0;
-    opacity: 1;
-    box-shadow: inset 0 0 0 var(--t-fg);
-    cursor: default;
+.tabs-component-tab.is-active {
+  background-color: var(--t-fg);
+  color: var(--t-bg);
+  border-bottom: 0;
+  opacity: 1;
+  box-shadow: inset 0 0 0 var(--t-fg);
+  cursor: default;
 
-    .tabs-component-tab-a {
-      opacity: 1;
-    }
-  }
-  
-  .tabs-component-tab.is-disabled * {
-    color: #cdcdcd;
-    cursor: not-allowed !important;
-  }
-  
-  @media (min-width: 700px) {
-    .tabs-component-tab {
-      margin-right: .5em;
-    }
-  
-    .tabs-component-tab.is-active {
-    }
-  }
-  
   .tabs-component-tab-a {
-    align-items: center;
-    color: inherit;
-    display: flex;
-    padding: .75em 1em;
-    text-decoration: none;
-    
-    &:focus {
-      outline: 0;
-    }
+    opacity: 1;
   }
+}
   
-  .tabs-component-panels {
-    padding: 1em 0;
+.tabs-component-tab {
+  margin-right: .5rem;
+}
+  
+
+.tabs-component-tab-a {
+  align-items: center;
+  color: inherit;
+  display: flex;
+  padding: .75rem 1rem;
+  text-decoration: none;
+  
+  &:focus {
+    outline: 0;
   }
-  
-  @media (min-width: 700px) {
-    .tabs-component-panels {
-      background-color: #fff;
-      padding: 1em 1em 1em 0;
-    }
-  }
-  
+}
