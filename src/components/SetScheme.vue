@@ -10,7 +10,8 @@
     <div class="inode" v-for="(result, index) in $root.$data.inodes" :key="index" :data-code="result.code">
       <span class="description"
             :class="{selected: $root.$data.currentScheme == result.code}"
-            :style="`grid-row: ${index + 2}`">
+            :style="`grid-row: ${index + 2}`"
+            @click="setEditing('fg', result.bg, index)">
         {{result.description}}
       </span>
       <div class="changers"
@@ -27,8 +28,9 @@
                 :class="{ editing: editing != null && index == editing.index && editing.representing == 'bg'}"
                 :data-applied="result.bg" />
         <button @click="setEditing('eff', result.eff, index)"
-                class="change effect"
+                class="change eff"
                 :class="{ editing: editing != null && index == editing.index && editing.representing == 'eff' }"
+                :ref="`eff-${index}`"
                 :data-applied="result.eff" />
       </div>
 
@@ -39,7 +41,6 @@
 <script>
 import ColorPopup from './ColorPopup'
 // import { inodes as inodesCopy } from './inodes.js'
-
 
 export default {
   name: 'SetScheme',
@@ -53,7 +54,13 @@ export default {
       editing: null,
       representing: null,
       currentValue: null,
-      hideTip: false
+      hideTip: false,
+      isBold: false
+    }
+  },
+  watch: {
+    editing: function () {
+      this.checkIfBold()
     }
   },
   methods: {
@@ -69,9 +76,19 @@ export default {
         this.$root.$data.currentScheme = this.$root.$data.inodes[index].code
       })
     },
-    evalCurrentScheme() {
+    evalCurrentScheme () {
       if (!this.editing) {
         this.$root.$data.$currentScheme = null
+      }
+    },
+    checkIfBold () {
+      if (this.editing) {
+        var index = this.editing.index
+        if (this.$root.$data.inodes[index].eff === '01') {
+          this.isBold = true
+        }
+      } else {
+        this.isBold = false
       }
     }
   }
@@ -94,14 +111,15 @@ h2 {
 
 .description {
   grid-column: 1 / 2;
-  width: auto;
+  width: max-content;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-all;
   word-break: break-word;
-  display: flex;
-  align-items: center;
-  flex-direction: row-reverse;
+  cursor: pointer;
+  user-select: none;
+  justify-self: self-end;
+  align-self: center;
 
   &.selected {
     font-weight: bold;
@@ -143,16 +161,16 @@ h2 {
     background-image: $clear;
   }
 
-  &.effect[data-applied="00"]:after {
+  &.eff[data-applied="00"]:after {
     content: 'N';
   }
 
-  &.effect[data-applied="01"]:after {
+  &.eff[data-applied="01"]:after {
     content: 'B';
     font-weight: bold;
   }
 
-  &.effect[data-applied="04"]:after {
+  &.eff[data-applied="04"]:after {
     content: 'U';
     text-decoration: underline;
   }

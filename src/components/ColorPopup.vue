@@ -1,6 +1,6 @@
 <template>
   <div class="container"
-       :class="{bright: representing === 'fg' && checkBold}"
+       :class="{bright: representing === 'fg' && isBold}"
        @keydown.esc="$parent.editing = null">
     <label :data-output="tile"
             v-for="(tile, index) in tileSet"
@@ -21,7 +21,7 @@
             v-else>
     </label>
     <button class="popup-tile done" @click="closePopup"></button>
-    <aside class="boldInfo" v-if="checkBold && !hideTip">
+    <aside class="boldInfo" v-if="isBold && !hideTip && representing === 'fg'">
       <header>
         <h3>FYI</h3>
         <svg viewBox="0 0 14 14" @click="emitHideTip()">
@@ -51,16 +51,8 @@ export default {
       currentColor: this.editing.currentValue,
       callerIndex: this.editing.index,
       defaults: null,
-      hideTip: this.$parent.hideTip
-    }
-  },
-  computed: {
-    checkBold () {
-      if (this.defaults && this.defaults.eff === "01") {
-        return true
-      } else {
-        return false
-      }
+      hideTip: this.$parent.hideTip,
+      isBold: this.$parent.isBold
     }
   },
   directives: {
@@ -74,23 +66,32 @@ export default {
     }
   },
   mounted: function () {
+    let height
     this.defaults = this.$root.$data.inodesDefault[this.callerIndex]
     if (this.representing === 'fg') {
       this.tileSet = ['0', '30', '31', '32', '33', '34', '35', '36', '37', '90', '91', '92', '93', '94', '95', '96', '97']
       this.representing = 'fg'
-      this.getRows(12)
+      height = 10
     } else if (this.representing === 'bg') {
       this.tileSet = ['0', '41', '42', '43', '44', '45', '46', '47', '100', '101', '102', '103', '104', '105', '106', '107']
       this.representing = 'bg'
-      this.getRows(11)
+      height = 9
     } else {
       this.tileSet = ['00', '01', '04']
       this.representing = 'eff'
-      this.getRows(6)
+      height = 4
+    }
+    if (this.callerIndex + 10 < this.$root.$data.inodes.length) {
+      document.documentElement.style.setProperty('--popup-row-start', this.callerIndex + 3)
+      document.documentElement.style.setProperty('--popup-row-end', this.callerIndex + 3 + height)
+    } else {
+      document.documentElement.style.setProperty('--popup-row-start', this.callerIndex - height + 2)
+      document.documentElement.style.setProperty('--popup-row-end', this.callerIndex + 2)
     }
   },
   methods: {
     getTitle (tile, representing) {
+      /* eslint-disable-next-line */
       if (tile == this.defaults[this.representing]) {
         return 'This is the default value'
       }
@@ -101,15 +102,6 @@ export default {
     emitHideTip () {
       this.$emit('hide-tip')
       this.hideTip = true
-    },
-    getRows (height) {
-      if (this.callerIndex + height <= this.$root.$data.inodes.length) {
-        document.documentElement.style.setProperty('--popup-row-start', this.callerIndex + 3)
-        document.documentElement.style.setProperty('--popup-row-end', this.callerIndex + height + 1)
-      } else {
-        document.documentElement.style.setProperty('--popup-row-start', this.callerIndex + 4 - height)
-        document.documentElement.style.setProperty('--popup-row-end', this.callerIndex + 2)
-      }
     },
     closePopup () {
       document.querySelector(`[data-code="${this.defaults.code}"] .change.${this.representing}`).focus()
