@@ -35,6 +35,7 @@
       </div>
 
     </div>
+    {{changes}}
   </section>
 </template>
 
@@ -55,7 +56,8 @@ export default {
       representing: null,
       currentValue: null,
       hideTip: false,
-      isBold: false
+      isBold: false,
+      changes: []
     }
   },
   watch: {
@@ -65,7 +67,37 @@ export default {
   },
   methods: {
     receiveEmission (event) {
-      this.$root.$data.inodes[event.index][event.representing] = event.color
+      var copy = this.$root.$data.inodes
+      var original = this.$root.$data.inodesDefault
+      var code = original[event.index].code
+      var find = this.changes.find(o => { return o.code === code })
+      copy[event.index][event.representing] = event.color
+      if (copy[event.index][event.representing] != original[event.index][event.representing]) {
+        var obj
+        var push
+        if (find) {
+          obj = find
+          push = false
+        } else {
+          obj = new Object()
+          push = true
+        }
+        obj.code = code
+        obj[event.representing] = event.color
+        push && this.changes.push(obj)
+      } else {
+        if (find) {
+          delete find[event.representing]
+          if (!find.fg && !find.bg && !find.eff) {
+            console.log(`${find} is empty`)
+            var index = this.changes.findIndex(o => { return o.code === code })
+            console.log(index)
+            this.changes.splice(index, 1)
+          } else {
+            console.log(find.fg, find.bg, find.eff)
+          }
+        }
+      }
     },
     setEditing (representing, currentValue, index) {
       if (this.editing) {

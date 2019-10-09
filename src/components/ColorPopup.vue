@@ -73,7 +73,7 @@ export default {
       this.representing = 'fg'
       height = 10
     } else if (this.representing === 'bg') {
-      this.tileSet = ['0', '41', '42', '43', '44', '45', '46', '47', '100', '101', '102', '103', '104', '105', '106', '107']
+      this.tileSet = ['40', '41', '42', '43', '44', '45', '46', '47', '100', '101', '102', '103', '104', '105', '106', '107']
       this.representing = 'bg'
       height = 9
     } else {
@@ -207,7 +207,8 @@ export default {
     background-position: 50% 50%, 0% 0%;
   }
 
-  [data-output="0"] {
+  [data-output="0"],
+  [data-output="40"] {
     @include none;
     grid-column: 1;
 
