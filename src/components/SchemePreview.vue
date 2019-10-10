@@ -1,10 +1,9 @@
 <template>
   <section class="terminal">
-    <div class="preview-bg"></div>
-    <div class="b-prompt">you@home<span class="t-fg">:<span class="a-bBlue">~</span>$ ls -1</span></div>
-    <div v-for="(result, index) in $root.$data.inodes"
-         :key="index" :class="{active: result.code == $root.$data.currentScheme}"
-         :style="`grid-row: ${index + 2}`"
+    <div v-for="(result, index) in $parent.$data.inodes"
+         :key="index"
+         :class="{active: result.code == currentlyEditing.code}"
+         @click="emitEditing(result)"
          class="inode"
          :id="`b-${result.code}`"
          :data-fg="result.fg"
@@ -17,52 +16,33 @@
 
 <script>
 export default {
-
+  props: {
+    currentlyEditing: Object
+  },
+  methods: {
+    emitEditing (obj) {
+      this.$emit('edit-change', obj)
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '../scss/vars';
 
-.b-prompt {
-  color: var(--a-brightGreen);
-  font-weight: bold;
-  grid-row: 1;
-  padding-left: .5em;
-}
-
-.preview-bg {
-  grid-column: -1;
-  grid-row: 1 / -1;
-  background-color: var(--t-bg);
-  height: 100%;
-  margin: 0;
-}
-
-.a-bBlue {
-  color: var(--a-brightBlue);
-}
-
 .terminal {
-  display: contents;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: repeat(20, 1.5rem) 1fr;
+  grid-auto-flow: column;
+  line-height: 1;
 }
 
 .terminal > * {
-  grid-column: 3 / 4;
-  font-family:
-    "SFMono-Regular",
-    "Liberation Mono",
-    Menlo,
-    Courier,
-    monospace;
-  font-size: 1.3em;
+  grid-column: 1 / 2;
   white-space: nowrap;
   align-self: center;
   user-select: none;
-}
-
-.t-fg {
-  color: var(--t-fg);
 }
 
 .inode {
@@ -70,16 +50,7 @@ export default {
   list-style: none;
   width: min-content;
   position: relative;
-  height: 1em;
-  margin: 0 1.25rem 0 .5rem;
-}
-
-.v-contents {
-  padding-left: 0;
-}
-
-.v-contents:last-child {
-  margin-bottom: 2em;
+  cursor: pointer;
 }
 
 [data-eff="01"] {
@@ -94,7 +65,7 @@ export default {
   content: '';
   display: inline-block;
   width: 1ch;
-  height: .3rem;
+  height: .2rem;
   position: absolute;
   top: calc(100% - .2rem);
   left: calc(100% + .1rem);

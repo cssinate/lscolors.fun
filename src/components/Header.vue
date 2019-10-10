@@ -1,7 +1,8 @@
 <template>
   <header>
-    <pre><span v-html="headerContent[0]"></span></pre>
+    <pre role="presentation"><span v-html="headerContent[0]"></span></pre>
     <pre>Color schemes and themes for LS_COLORS and your favourite terminal!</pre>
+    <h1 class="sr-only">LSCOLORS.FUN</h1>
   </header>
 </template>
 
@@ -48,12 +49,13 @@ header {
   user-select: none;
 }
 
-pre:first-child {
+pre:first-of-type {
   font-size: .7em;
   padding-bottom: 1em;
+  line-height: 1;
 }
 
-pre:last-child {
+pre:last-of-type {
   color: var(--a-brightMagenta);
   font-size: 1em;
   padding-bottom: 1em;

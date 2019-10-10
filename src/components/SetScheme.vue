@@ -1,16 +1,12 @@
 <template>
   <section>
-    <color-popup @current-color="receiveEmission($event)" @hide-tip="hideTip = true" v-if="editing" :editing="editing" />
-    <h2 class="description" style="grid-row: 1;">Description</h2>
-    <div class="changers" style="grid-row: 1;">
-      <h2>FG</h2>
-      <h2>BG</h2>
-      <h2>Eff</h2>
+    <div>
+      {{currentlyEditing.description}}
     </div>
-    <div class="inode" v-for="(result, index) in $root.$data.inodes" :key="index" :data-code="result.code">
+    <!-- <color-popup @current-color="receiveEmission($event)" @hide-tip="hideTip = true" v-if="editing" :editing="editing" /> -->
+    <!-- <div class="inode" v-for="(result, index) in $parent.$data.inodes" :key="index" :data-code="result.code">
       <span class="description"
-            :class="{selected: $root.$data.currentScheme == result.code}"
-            :style="`grid-row: ${index + 2}`"
+            :class="{selected: $parent.$data.currentScheme == result.code}"
             @click="setEditing('fg', result.bg, index)">
         {{result.description}}
       </span>
@@ -21,7 +17,7 @@
                 class="change color fg"
                 :class="{ editing: editing != null && index == editing.index && editing.representing == 'fg'}"
                 :data-applied="result.fg"
-                @focus="$root.$data.currentScheme = result.code"
+                @focus="$parent.$data.currentScheme = result.code"
                 @blur="evalCurrentScheme" />
         <button @click="setEditing('bg', result.bg, index)"
                 class="change color bg"
@@ -33,9 +29,7 @@
                 :ref="`eff-${index}`"
                 :data-applied="result.eff" />
       </div>
-
-    </div>
-    {{changes}}
+    </div> -->
   </section>
 </template>
 
@@ -45,6 +39,9 @@ import ColorPopup from './ColorPopup'
 
 export default {
   name: 'SetScheme',
+  props: {
+    currentlyEditing: Object
+  },
   components: {
     // eslint-disable-next-line
     ColorPopup
@@ -67,8 +64,8 @@ export default {
   },
   methods: {
     receiveEmission (event) {
-      var copy = this.$root.$data.inodes
-      var original = this.$root.$data.inodesDefault
+      var copy = this.$parent.$data.inodes
+      var original = this.$parent.$data.inodesDefault
       var code = original[event.index].code
       var find = this.changes.find(o => { return o.code === code })
       copy[event.index][event.representing] = event.color
@@ -105,18 +102,18 @@ export default {
       }
       this.$nextTick(() => {
         this.editing = { representing: representing, currentValue: currentValue, index: index }
-        this.$root.$data.currentScheme = this.$root.$data.inodes[index].code
+        this.$parent.$data.currentScheme = this.$parent.$data.inodes[index].code
       })
     },
     evalCurrentScheme () {
       if (!this.editing) {
-        this.$root.$data.$currentScheme = null
+        this.$parent.$data.$currentScheme = null
       }
     },
     checkIfBold () {
       if (this.editing) {
         var index = this.editing.index
-        if (this.$root.$data.inodes[index].eff === '01') {
+        if (this.$parent.$data.inodes[index].eff === '01') {
           this.isBold = true
         }
       } else {
@@ -142,7 +139,7 @@ h2 {
 }
 
 .description {
-  grid-column: 1 / 2;
+  grid-column: 3 / 4;
   width: max-content;
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -167,8 +164,9 @@ h2 {
 }
 
 .changers {
-  grid-column: 2 /3;
+  grid-column: 2 / 3;
   display: grid;
+  display: none;
   grid-template-columns: repeat(3, auto);
   grid-gap: .5rem;
   align-items: center;

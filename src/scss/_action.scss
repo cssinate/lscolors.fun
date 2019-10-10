@@ -1,0 +1,20 @@
+.action {
+    &::before, &::after {
+        color: var(--a-magenta);
+    }
+    &::before {
+        content: ">> ";
+    }
+    &::after {
+        content: " <<";
+    }
+
+    color: var(--a-brightMagenta);
+    cursor: pointer;
+    font-weight: bold;
+
+    &:focus {
+        text-decoration: underline;     
+    }
+
+}

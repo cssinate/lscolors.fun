@@ -4,8 +4,6 @@ import './registerServiceWorker'
 
 import './scss/main.scss'
 
-import { inodes as results } from './components/inodes.js'
-
 Vue.config.productionTip = false
 
 let currentScheme = ''
@@ -29,8 +27,6 @@ Vue.directive('click-outside', {
 new Vue({
   render: h => h(App),
   data: {
-    currentScheme: currentScheme,
-    inodes: JSON.parse(JSON.stringify(results)),
-    inodesDefault: results
+
   }
 }).$mount('#app')
