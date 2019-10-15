@@ -1,0 +1,18 @@
+.mainNav {
+    display: flex;
+    flex-direction: column;
+}
+
+.mainNav a {
+    color: var(--a-brightYellow);
+    font-weight: bold;
+    margin-left: 3ch;
+}
+
+.mainNav a.active {
+    margin-left: 0;
+}
+
+.mainNav a.active::before {
+    content: ">> ";
+}

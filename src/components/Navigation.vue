@@ -1,29 +1,24 @@
 <template>
-  <nav>
-    <span>Show/Hide:</span>
-    <button v-for="link in navItems"
+  <nav class="mainNav">
+    <a v-for="link in navItems"
             :key="link.short"
-            @click="currentNavStates[link.short] = !currentNavStates[link.short]"
-            :class="{ active: currentNavStates[link.short] }">{{link.name}}</button>
+            @click="setActiveNav(link.short)"
+            :class="{ active: activeNav === link.short }">{{link.name}}</a>
   </nav>
 </template>
 
 <script>
   export default {
     props: {
-      navStates: Object
+      value: String
     },
     data: function () {
       return {
-        currentNavStates: this.navStates,
+        activeNav: this.value,
         navItems: [
           {
             name: 'Introduction',
             short: 'intro'
-          },
-          {
-            name: 'Terminal Preview',
-            short: 'preview'
           },
           {
             name: 'Set Scheme',
@@ -36,9 +31,10 @@
         ]
       }
     },
-    watch: {
-      navStates: function () {
-        this.$emit('nav-states', this.currentNavStates)
+    methods: {
+      setActiveNav: function (item) {
+        this.activeNav = item
+        this.$emit('input', item)
       }
     },
     mounted: function () {
@@ -48,12 +44,8 @@
 
 <style lang="scss" scoped>
   nav {
-    grid-area: menu;
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: min-content;
-    grid-gap: 3ch;
-    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
   }
 
   button {

@@ -1,31 +1,46 @@
 <template>
   <section ref="terminal" class="terminal">
-    <button v-for="(result, index) in $parent.$data.inodes"
-         :key="index"
-         :class="{active: result.code == currentlyEditing.code}"
-         @click="emitEditing(result)"
-         class="inode"
-         :id="`b-${result.code}`"
-         :data-fg="result.fg"
-         :data-bg="result.bg"
-         :data-eff="result.eff">
+    <component v-for="(result, index) in $parent.$data.inodes"
+               :key="index"
+               :class="{active: result.code == currentlyEditing.code && isScheme, isButton: isScheme}"
+               @click="emitEditing(result)"
+               class="inode"
+               :id="`b-${result.code}`"
+               :data-fg="result.fg"
+               :data-bg="result.bg"
+               :data-eff="result.eff"
+               ref="inode"
+               :is="isScheme ? 'button' : 'div'" >
       {{result.short ? result.short : result.description}}
-    </button>
+    </component>
   </section>
 </template>
 
 <script>
 export default {
   props: {
-    currentlyEditing: Object
+    currentlyEditing: Object,
+    isScheme: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: function () {
+    return {
+    }
   },
   methods: {
     emitEditing (obj) {
-      this.$emit('edit-change', obj)
+      if (this.isScheme) {
+        this.$emit('edit-change', obj)
+      }
     }
   },
   mounted: function () {
     this.$refs.terminal.style.setProperty('--inode-count', this.$parent.$data.inodes.length)
+  },
+  watch: {
+
   }
 }
 </script>
@@ -53,7 +68,13 @@ export default {
   list-style: none;
   width: min-content;
   position: relative;
-  cursor: pointer;
+  height: 1em;
+  box-sizing: border-box;
+  line-height: 1em;
+
+  &.isButton {
+    cursor: pointer;
+  }
 }
 
 [data-eff="01"] {

@@ -92,6 +92,12 @@ export default {
   computed: {
     currentFg: function () {
       return this.currentlyEditing.fg
+    },
+    currentBg: function () {
+      return this.currentlyEditing.bg
+    },
+    currentEff: function () {
+      return this.currentlyEditing.eff
     }
   },
   watch: {
@@ -100,6 +106,13 @@ export default {
     },
     currentFg: function () {
       this.checkIfBold()
+      this.checkForChanges('fg')
+    },
+    currentBg: function () {
+      this.checkForChanges('bg')
+    },
+    currentEff: function () {
+      this.checkForChanges('eff')
     }
   },
   methods: {
@@ -114,13 +127,39 @@ export default {
         this.isBold = false
       }
     },
-    changeStyle (area, value) {
-      this.currentlyEditing[area] = value
-    },
     setToDefault () {
       this.currentlyEditing.fg = this.currentDefaults.fg
       this.currentlyEditing.bg = this.currentDefaults.bg
       this.currentlyEditing.eff = this.currentDefaults.eff
+    },
+    checkForChanges: function (area) {
+      var copy = this.currentlyEditing
+      var original = this.currentDefaults
+      var code = original.code
+      var find = this.changes.find(obj => { return obj.code === code })
+      if (copy[area] != original[area]) {
+        var obj
+        var push
+        if (find) {
+          obj = find
+          push = false
+        } else {
+          obj = new Object()
+          push = true
+        }
+        obj.code = code
+        obj[area] = copy[area]
+        push && this.changes.push(obj)
+      } else {
+        if (find) {
+          delete find[area]
+          if (!find.fg && !find.bg && !find.eff) {
+            var index = this.changes.findIndex(o => { return o.code === code })
+            this.changes.splice(index, 1)
+          }
+        }
+      }
+      this.$emit('scheme-changes', this.changes)
     }
   }
 }

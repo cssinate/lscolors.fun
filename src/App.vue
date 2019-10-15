@@ -2,20 +2,24 @@
   <div id="app">
     <Header />
     <!-- <PageContent /> -->
-    <navigation :nav-states="shownPanels" ref="nav" @nav-states="updatePanels($event)" />
+
     <main class="content">
-      <introduction class="panel" v-if="shownPanels.intro" @hide-me="hidePanel('intro')" />
+      <navigation v-model="activeNav" />
+      <introduction class="panel" v-if="activeNav === 'intro'" @go-to-scheme="activeNav = 'scheme'" />
       <scheme-preview class="panel"
                       @edit-change="currentScheme = $event"
                       :currently-editing="currentScheme"
-                      v-if="shownPanels.preview" />
+                      :isScheme="activeNav === 'scheme'"
+                      v-if="activeNav === 'scheme' || activeNav === 'theme'" />
       <scheme class="panel"
               :currently-editing="currentScheme"
               :current-defaults="inodesDefault[currentScheme.index]"
               ref="setScheme"
-              v-if="shownPanels.scheme && currentScheme && inodesDefault[currentScheme.index]" />
+              @scheme-changes="schemeChanges = $event"
+              v-if="activeNav === 'scheme' && currentScheme && inodesDefault[currentScheme.index]" />
       <set-theme class="panel"
-                 v-if="shownPanels.theme" />
+                 v-if="activeNav === 'theme'" />
+                 {{schemeChanges}}
     </main>
   </div>
 </template>
@@ -44,43 +48,25 @@ export default {
   },
   data: function () {
     return {
-      shownPanels: {
-        intro: true,
-        preview: true,
-        scheme: true,
-        theme: true
-      },
+      activeNav: 'intro',
       inodes: JSON.parse(JSON.stringify(results)),
       inodesDefault: results,
       currentScheme: {},
-      currentDefaults: {}
+      currentDefaults: {},
+      schemeChanges: null,
+      themeChanges: null
     }
   },
   watch: {
-    evalScheme: function (val, oldVal) {
-      if (!val.preview && oldVal.scheme) {
-        this.shownPanels.scheme = false
-      }
-      if (!oldVal.preview && !oldVal.scheme) {
-        this.shownPanels.preview = true
-      }
-    },
+
     currentScheme: function () {
       this.currentDefaults = this.inodesDefault[this.currentScheme.index]
     }
   },
   computed: {
-    evalScheme () {
-      return { preview: this.shownPanels.preview, scheme: this.shownPanels.scheme }
-    }
+
   },
   methods: {
-    hidePanel (comp) {
-      this.shownPanels[comp] = false
-    },
-    updatePanels (event) {
-      this.shownPanels = event
-    }
   },
   mounted: function () {
     var inodeIndex = 0
