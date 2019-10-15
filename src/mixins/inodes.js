@@ -28,26 +28,26 @@ export let inodes = [{
   bg: 0,
   eff: '01'
 },
-{
-  code: 'mh',
-  description: 'multi-hardlink',
-  fg: 0,
-  bg: 0,
-  eff: '00'
-},
+// {
+//   code: 'mh',
+//   description: 'multi-hardlink',
+//   fg: 0,
+//   bg: 0,
+//   eff: '00'
+// },
 {
   code: 'or',
   short: 'broken symlink',
   description: 'broken symbolic link',
   fg: 31,
-  bg: 40,
+  bg: 0,
   eff: '01'
 },
 {
   code: 'pi',
   description: 'named pipe',
   fg: 33,
-  bg: 40,
+  bg: 0,
   eff: '00'
 },
 {
@@ -62,7 +62,7 @@ export let inodes = [{
   short: 'block driver',
   description: 'block device driver',
   fg: 33,
-  bg: 40,
+  bg: 0,
   eff: '01'
 },
 {
@@ -70,7 +70,7 @@ export let inodes = [{
   short: 'character driver',
   description: 'character device driver',
   fg: 33,
-  bg: 40,
+  bg: 0,
   eff: '01'
 },
 {

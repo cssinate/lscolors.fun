@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { headerDirs } from '../headerText.js'
+import { headerDirs } from '../mixins/headerText.js'
 
 export default {
   data () {

@@ -3,7 +3,7 @@
     <h2>What is this thing?</h2>
     <p>When you type <code>ls</code> into your bash terminal, it lists files and directories. On most installations, those files and directories are styled to indicate some of their properties. The terminal can use 16 available colors. And the defaults are kind of ugly.</p>
 
-    <p>Most modern terminal applications map an rgb color to each of the 16 colors. Instead of displaying <span style="color: var(--a-brightRed)">Bright Red</span> as <span style="color: #ff0000">#ff0000</span>, the terminal can map it to <span style="color: #c0ffee;">#c0ffee</span> or <span style="color: #bada55;">#bada55</span>.</p>
+    <p>Most modern terminal applications map an rgb color to each of the 16 colors. Instead of displaying <span style="color: var(--a-brightGreen)">Bright Green</span> as <span style="color: #00ff00">#00ff00</span>, the terminal is capabale of mapping it to <span style="color: #c0ffee;">#c0ffee</span> or <span style="color: #bada55;">#bada55</span>.</p>
 
     <p>This application helps you style different types of files and folders, AND it helps you generate a theme for your terminal application.</p>
 

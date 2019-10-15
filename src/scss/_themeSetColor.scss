@@ -1,0 +1,25 @@
+.themeSetColor {
+    display: flex;
+    color: var(--t-fg);
+    justify-content: space-between;
+    position: relative;
+
+    &:focus::before {
+        content: '$';
+        position: absolute;
+        right: calc(100% + 1ch);
+    }
+}
+
+.themeSetColor_name {
+    white-space: nowrap;
+}
+
+.themeSetColor_preview {
+    height: 1rem;
+    width: 1ch;
+    margin-left: 1ch;
+    box-sizing: content-box;
+    border: solid 1px var(--t-bg);
+    outline: solid 1px var(--t-fg);
+}

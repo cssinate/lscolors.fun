@@ -46,14 +46,25 @@ export default {
 
 <style lang="scss" scoped>
 .saturation {
-  height: 30px;
-  width: 30px;
+  height: 9rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
   position: relative;
 }
 
 .hue {
   position: relative;
-  height: 30px;
-  width: 30px;
+  height: 1rem;
+  width: 100%;
+}
+
+/deep/ .vc-hue-picker {
+  all: unset;
+  height: 1rem;
+  border: solid 1px var(--t-bg);
+  outline: solid 1px var(--t-fg);
+  background: transparent;
+  // margin-top: 0;
+  width: 1ch;
 }
 </style>

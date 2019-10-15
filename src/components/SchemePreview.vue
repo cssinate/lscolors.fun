@@ -1,6 +1,6 @@
 <template>
-  <section class="terminal">
-    <div v-for="(result, index) in $parent.$data.inodes"
+  <section ref="terminal" class="terminal">
+    <button v-for="(result, index) in $parent.$data.inodes"
          :key="index"
          :class="{active: result.code == currentlyEditing.code}"
          @click="emitEditing(result)"
@@ -10,7 +10,7 @@
          :data-bg="result.bg"
          :data-eff="result.eff">
       {{result.short ? result.short : result.description}}
-    </div>
+    </button>
   </section>
 </template>
 
@@ -23,6 +23,9 @@ export default {
     emitEditing (obj) {
       this.$emit('edit-change', obj)
     }
+  },
+  mounted: function () {
+    this.$refs.terminal.style.setProperty('--inode-count', this.$parent.$data.inodes.length)
   }
 }
 </script>
@@ -33,7 +36,7 @@ export default {
 .terminal {
   display: grid;
   grid-template-columns: 1fr auto;
-  grid-template-rows: repeat(20, 1.5rem) 1fr;
+  grid-template-rows: repeat(var(--inode-count), 1.5rem) 1fr;
   grid-auto-flow: column;
   line-height: 1;
 }
@@ -59,6 +62,14 @@ export default {
 
 [data-eff="04"] {
   text-decoration: underline;
+}
+
+.inode:focus::before {
+  content: '$';
+  color: var(--t-fg);
+  background-color: var(--t-bg);
+  position: absolute;
+  right: calc(100% + 1ch);
 }
 
 .inode.active::after {

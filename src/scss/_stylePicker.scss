@@ -1,0 +1,58 @@
+.style-tile-wrapper {
+    display: grid;
+    grid-auto-columns: 2rem;
+    grid-auto-rows: 1.5rem;
+    grid-gap: .25rem;
+    margin-top: .5rem;
+    margin-bottom: 2.25rem;
+
+    &.Effect {
+        grid-auto-flow: column;
+    }
+}
+
+.style-tile {
+    cursor: pointer;
+    color: var(--t-fg);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: content-box;
+
+    &:focus-within {
+        outline: dashed .25rem var(--t-fg);
+    }
+
+    &.selected {
+        outline: solid .25rem var(--t-fg);
+    }
+}
+
+.fg.style-tile--none {
+    grid-row: 1 / 3;
+    grid-column: 1;
+}
+
+.bg.style-tile--none {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.style-tile input {
+    opacity: 0;
+    cursor: pointer;
+    position: absolute;
+}
+
+.style-tile {
+  &[data-output^="3"],
+  &[data-output^="4"] {
+    grid-row: 1;
+  }
+
+  &[data-output^="9"],
+  &[data-output^="1"] {
+    grid-row: 2;
+  }
+}
