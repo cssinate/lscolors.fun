@@ -6,7 +6,10 @@
 
 <script>
 export default {
-
+  props: {
+    schemeDiffs: Array,
+    themeDiffs: Array
+  }
 }
 </script>
 

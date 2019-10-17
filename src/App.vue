@@ -4,22 +4,33 @@
     <!-- <PageContent /> -->
 
     <main class="content">
-      <navigation v-model="activeNav" />
-      <introduction class="panel" v-if="activeNav === 'intro'" @go-to-scheme="activeNav = 'scheme'" />
-      <scheme-preview class="panel"
-                      @edit-change="currentScheme = $event"
-                      :currently-editing="currentScheme"
-                      :isScheme="activeNav === 'scheme'"
-                      v-if="activeNav === 'scheme' || activeNav === 'theme'" />
+
+      <navigation
+        v-model="activeNav" />
+
+      <introduction
+        class="panel"
+        v-if="activeNav === 'intro'"
+        @go-to-scheme="activeNav = 'scheme'" />
+
+      <preview
+        class="panel"
+        @edit-change="currentScheme = $event"
+        :currently-editing="currentScheme"
+        :isScheme="activeNav === 'scheme'"
+        :changes="schemeChanges"
+        v-if="activeNav === 'scheme' || activeNav === 'theme'" />
+
       <scheme class="panel"
               :currently-editing="currentScheme"
               :current-defaults="inodesDefault[currentScheme.index]"
               ref="setScheme"
               @scheme-changes="schemeChanges = $event"
               v-if="activeNav === 'scheme' && currentScheme && inodesDefault[currentScheme.index]" />
+
       <set-theme class="panel"
                  v-if="activeNav === 'theme'" />
-                 {{schemeChanges}}
+
     </main>
   </div>
 </template>
@@ -30,7 +41,7 @@ import Header from './components/Header.vue'
 import Navigation from './components/Navigation.vue'
 import Introduction from './components/Introduction.vue'
 import Scheme from './components/SetScheme'
-import SchemePreview from './components/SchemePreview'
+import Preview from './components/Preview'
 import SetTheme from './components/SetTheme'
 
 import { inodes as results } from './mixins/inodes.js'
@@ -43,7 +54,7 @@ export default {
     Navigation,
     Introduction,
     Scheme,
-    SchemePreview,
+    Preview,
     SetTheme
   },
   data: function () {

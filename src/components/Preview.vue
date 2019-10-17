@@ -1,18 +1,27 @@
 <template>
-  <section ref="terminal" class="terminal">
-    <component v-for="(result, index) in $parent.$data.inodes"
-               :key="index"
-               :class="{active: result.code == currentlyEditing.code && isScheme, isButton: isScheme}"
-               @click="emitEditing(result)"
-               class="inode"
-               :id="`b-${result.code}`"
-               :data-fg="result.fg"
-               :data-bg="result.bg"
-               :data-eff="result.eff"
-               ref="inode"
-               :is="isScheme ? 'button' : 'div'" >
+  <section
+    ref="terminal"
+    class="terminal"
+  >
+    <component
+      v-for="(result, index) in $parent.$data.inodes"
+      :key="index"
+      :class="{
+        active: result.code == currentlyEditing.code && isScheme,
+        isButton: isScheme,
+        changed: isChanged
+      }"
+      class="inode"
+      @click="emitEditing(result)"
+      :id="`b-${result.code}`"
+      :data-fg="result.fg"
+      :data-bg="result.bg"
+      :data-eff="result.eff"
+      :ref="`inode-${result.code}`"
+      :is="isScheme ? 'button' : 'div'" >
       {{result.short ? result.short : result.description}}
     </component>
+    {{changes}}
   </section>
 </template>
 
@@ -23,7 +32,8 @@ export default {
     isScheme: {
       type: Boolean,
       default: false
-    }
+    },
+    changes: Array
   },
   data: function () {
     return {
@@ -34,13 +44,27 @@ export default {
       if (this.isScheme) {
         this.$emit('edit-change', obj)
       }
-    }
+    },
   },
   mounted: function () {
-    this.$refs.terminal.style.setProperty('--inode-count', this.$parent.$data.inodes.length)
+    this.$nextTick(() => {
+      this.$refs.terminal.style.setProperty('--inode-count', this.$parent.$data.inodes.length)
+    })
+  },
+  computed: {
+    isChanged: function () {
+      console.log(this)
+    }
   },
   watch: {
+    changes: function () {
+      let changedInodes = document.querySelectorAll('.inode.changed')
+      console.log(`entries:`, changedInodes.entries().next())
+      this.changes.forEach(change => {
+        var inode = this.$refs[`inode-${change.code}`]
 
+      })
+    }
   }
 }
 </script>
@@ -103,6 +127,11 @@ export default {
   left: calc(100% + .1rem);
   animation: blink 1.5s steps(2, jump-none) infinite;
   background-color: var(--a-brightGreen);
+}
+
+.changed::after {
+  content: '*'
+
 }
 
 @keyframes blink {
