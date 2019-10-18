@@ -20,6 +20,9 @@
       <set-theme class="panel"
                  v-if="activeNav === 'theme'" />
                  {{schemeChanges}}
+      <export
+        v-if="activeNav === 'export'"
+        :scheme-changes="schemeChanges" />
     </main>
   </div>
 </template>
@@ -32,6 +35,7 @@ import Introduction from './components/Introduction.vue'
 import Scheme from './components/SetScheme'
 import SchemePreview from './components/SchemePreview'
 import SetTheme from './components/SetTheme'
+import Export from './components/Export'
 
 import { inodes as results } from './mixins/inodes.js'
 
@@ -44,7 +48,8 @@ export default {
     Introduction,
     Scheme,
     SchemePreview,
-    SetTheme
+    SetTheme,
+    Export
   },
   data: function () {
     return {

@@ -8,38 +8,42 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      value: String
-    },
-    data: function () {
-      return {
-        activeNav: this.value,
-        navItems: [
-          {
-            name: 'Introduction',
-            short: 'intro'
-          },
-          {
-            name: 'Set Scheme',
-            short: 'scheme'
-          },
-          {
-            name: 'Set Theme',
-            short: 'theme'
-          }
-        ]
-      }
-    },
-    methods: {
-      setActiveNav: function (item) {
-        this.activeNav = item
-        this.$emit('input', item)
-      }
-    },
-    mounted: function () {
+export default {
+  props: {
+    value: String
+  },
+  data: function () {
+    return {
+      activeNav: this.value,
+      navItems: [
+        {
+          name: 'Introduction',
+          short: 'intro'
+        },
+        {
+          name: 'Set Scheme',
+          short: 'scheme'
+        },
+        {
+          name: 'Set Theme',
+          short: 'theme'
+        },
+        {
+          name: 'Export',
+          short: 'export'
+        }
+      ]
     }
+  },
+  methods: {
+    setActiveNav: function (item) {
+      this.activeNav = item
+      this.$emit('input', item)
+    }
+  },
+  mounted: function () {
   }
+}
 </script>
 
 <style lang="scss" scoped>
