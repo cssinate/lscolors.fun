@@ -3,7 +3,7 @@
     <a v-for="link in navItems"
             :key="link.short"
             @click="setActiveNav(link.short)"
-            :class="{ active: activeNav === link.short }">{{link.name}}</a>
+            :class="{ active: value === link.short }">{{link.name}}</a>
   </nav>
 </template>
 

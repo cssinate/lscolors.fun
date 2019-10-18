@@ -7,11 +7,7 @@
 
     <p>This application helps you style different types of files and folders, AND it helps you generate a theme for your terminal application.</p>
 
-    <h2>How do I get started?</h2>
-
-    <p>Click one of the items on the right to edit its styling. Then you can move on to mapping your theme colors.</p>
-
-    <button class="action" @click="hideMe()">Hide this panel</button>
+    <button class="action" @click="goToScheme">Get Started</button>
   </div>
 </template>
 
@@ -19,8 +15,8 @@
   export default {
     name: "Introduction",
     methods: {
-      hideMe: function () {
-        this.$emit('hide-me');
+      goToScheme: function () {
+        this.$emit('go-to-scheme');
       }
     }
   }

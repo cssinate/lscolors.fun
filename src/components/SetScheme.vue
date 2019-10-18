@@ -1,24 +1,38 @@
 <template>
   <section>
-    <div class="inode currentlyEditing"
-         :data-fg="currentlyEditing.fg"
-         :data-bg="currentlyEditing.bg"
-         :data-eff="currentlyEditing.eff">
+    <div
+      class="inode currentlyEditing"
+      :data-fg="currentlyEditing.fg"
+      :data-bg="currentlyEditing.bg"
+      :data-eff="currentlyEditing.eff">
       {{currentlyEditing.description}}
     </div>
-    <style-selection area="Foreground"
-                     v-model="currentlyEditing.fg"
-                     :tiles="fgTiles"
-                     :default="currentDefaults.fg" />
-    <style-selection area="Background"
-                     v-model="currentlyEditing.bg"
-                     :tiles="bgTiles"
-                     :default="currentDefaults.bg" />
-    <style-selection area="Effect"
-                     v-model="currentlyEditing.eff"
-                     :tiles="effTiles"
-                     :default="currentDefaults.eff" />
-    <button class="action" @click="setToDefault()">Reset to Default</button>
+
+    <style-selection
+      area="Foreground"
+      v-model="currentlyEditing.fg"
+      :tiles="fgTiles"
+      :default="currentDefaults.fg" />
+
+    <style-selection
+      area="Background"
+      v-model="currentlyEditing.bg"
+      :tiles="bgTiles"
+      :default="currentDefaults.bg" />
+
+    <style-selection
+      area="Effect"
+      v-model="currentlyEditing.eff"
+      :tiles="effTiles"
+      :default="currentDefaults.eff" />
+
+    <button
+      class="action"
+      @click="setToDefault()"
+      v-if="changes.length">
+      Reset to Default
+    </button>
+
     <aside v-if="!hideTip && isBold" style="width: 40ch;">
       <h2>Note:</h2>
       <p>When the Bold effect is applied, the Bright variant of the color is shown by the terminal.</p>
