@@ -29,7 +29,7 @@
     <button
       class="action"
       @click="setToDefault()"
-      v-if="changes.length">
+      v-show="schemeChanges.length && currentIsChanged">
       Reset to Default
     </button>
 
@@ -48,7 +48,11 @@ export default {
   name: 'SetScheme',
   props: {
     currentlyEditing: Object,
-    currentDefaults: Object
+    currentDefaults: Object,
+    schemeChanges: {
+      type: Array,
+      required: true
+    }
   },
   components: {
     StyleSelection
@@ -58,7 +62,6 @@ export default {
       defaults: this.currentDefaults,
       hideTip: false,
       isBold: false,
-      changes: [],
       fgTiles: [
         { value: '0', name: 'None' },
         { value: '30', name: 'Black' },
@@ -112,6 +115,13 @@ export default {
     },
     currentEff: function () {
       return this.currentlyEditing.eff
+    },
+    currentIsChanged: function () {
+      if (this.schemeChanges.find(({ code }) => code === this.currentlyEditing.code)) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   watch: {
@@ -120,13 +130,13 @@ export default {
     },
     currentFg: function () {
       this.checkIfBold()
-      this.checkForChanges('fg')
+      this.$nextTick(() => this.$emit('scheme-change', 'fg'))
     },
     currentBg: function () {
-      this.checkForChanges('bg')
+      this.$nextTick(() => this.$emit('scheme-change', 'bg'))
     },
     currentEff: function () {
-      this.checkForChanges('eff')
+      this.$nextTick(() => this.$emit('scheme-change', 'eff'))
     }
   },
   methods: {
@@ -145,36 +155,8 @@ export default {
       this.currentlyEditing.fg = this.currentDefaults.fg
       this.currentlyEditing.bg = this.currentDefaults.bg
       this.currentlyEditing.eff = this.currentDefaults.eff
-    },
-    checkForChanges: function (area) {
-      var copy = this.currentlyEditing
-      var original = this.currentDefaults
-      var code = original.code
-      var find = this.changes.find(obj => { return obj.code === code })
-      if (copy[area] != original[area]) {
-        var obj
-        var push
-        if (find) {
-          obj = find
-          push = false
-        } else {
-          obj = new Object()
-          push = true
-        }
-        obj.code = code
-        obj[area] = copy[area]
-        push && this.changes.push(obj)
-      } else {
-        if (find) {
-          delete find[area]
-          if (!find.fg && !find.bg && !find.eff) {
-            var index = this.changes.findIndex(o => { return o.code === code })
-            this.changes.splice(index, 1)
-          }
-        }
-      }
-      this.$emit('scheme-changes', this.changes)
     }
+
   }
 }
 </script>

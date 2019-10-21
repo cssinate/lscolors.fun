@@ -14,22 +14,26 @@
         @go-to-scheme="activeNav = 'scheme'" />
 
       <preview
-        class="panel"
+        class="panel panel--preview"
         @edit-change="currentScheme = $event"
         :currently-editing="currentScheme"
         :isScheme="activeNav === 'scheme'"
         :changes="schemeChanges"
         v-if="activeNav === 'scheme' || activeNav === 'theme'" />
 
-      <scheme class="panel"
-              :currently-editing="currentScheme"
-              :current-defaults="inodesDefault[currentScheme.index]"
-              ref="setScheme"
-              @scheme-changes="schemeChanges = $event"
-              v-if="activeNav === 'scheme' && currentScheme && inodesDefault[currentScheme.index]" />
+      <scheme
+        class="panel panel--scheme"
+        :currently-editing="currentScheme"
+        :current-defaults="inodesDefault[currentScheme.index]"
+        ref="setScheme"
+        :scheme-changes="schemeChanges"
+        @scheme-change="checkForSchemeChanges($event)"
+        v-if="activeNav === 'scheme' && currentScheme && inodesDefault[currentScheme.index]" />
 
-      <set-theme class="panel"
-                 v-if="activeNav === 'theme'" />
+      <set-theme
+        class="panel panel--theme"
+        @theme-change="checkForThemeChanges($event)"
+        v-if="activeNav === 'theme'" />
 
       <export
         v-if="activeNav === 'export'"
@@ -47,8 +51,10 @@ import Introduction from './components/Introduction.vue'
 import Scheme from './components/SetScheme'
 import Preview from './components/Preview'
 import SetTheme from './components/SetTheme'
+import Export from './components/Export'
 
 import { inodes as results } from './mixins/inodes.js'
+import { themeProps } from './mixins/themeProperties.js'
 
 export default {
   name: 'app',
@@ -59,7 +65,8 @@ export default {
     Introduction,
     Scheme,
     Preview,
-    SetTheme
+    SetTheme,
+    Export
   },
   data: function () {
     return {
@@ -68,20 +75,46 @@ export default {
       inodesDefault: results,
       currentScheme: {},
       currentDefaults: {},
-      schemeChanges: null,
-      themeChanges: null
+      schemeChanges: [],
+      themeValues: []
     }
   },
   watch: {
-
     currentScheme: function () {
       this.currentDefaults = this.inodesDefault[this.currentScheme.index]
     }
   },
-  computed: {
-
-  },
   methods: {
+    checkForSchemeChanges: function (area) {
+      this.$nextTick(() => {
+        var copy = this.currentScheme
+        var original = this.currentDefaults
+        var code = original.code
+        var find = this.schemeChanges.find(obj => { return obj.code === code })
+        if (copy[area] != original[area]) {
+          var obj
+          var push
+          if (find) {
+            obj = find
+            push = false
+          } else {
+            obj = new Object()
+            push = true
+          }
+          obj.code = code
+          obj[area] = copy[area]
+          push && this.schemeChanges.push(obj)
+        } else {
+          if (find) {
+            delete find[area]
+            if (!find.fg && !find.bg && !find.eff) {
+              var index = this.schemeChanges.findIndex(o => { return o.code === code })
+              this.schemeChanges.splice(index, 1)
+            }
+          }
+        }
+      })
+    }
   },
   mounted: function () {
     var inodeIndex = 0
@@ -91,6 +124,13 @@ export default {
     })
     this.currentScheme = this.inodes[0]
     this.currentDefaults = this.inodesDefault[0]
+
+    themeProps.forEach(color => {
+      var themeSetting = new Object
+      themeSetting.name = color.name
+      themeSetting.hex = color.hex
+      this.themeValues.push(themeSetting)
+    })
   }
 }
 </script>

@@ -1,4 +1,9 @@
 .action {
+    color: var(--a-brightMagenta);
+    cursor: pointer;
+    font-weight: bold;
+    display: block;
+
     &::before, &::after {
         color: var(--a-magenta);
     }
@@ -8,10 +13,6 @@
     &::after {
         content: " <<";
     }
-
-    color: var(--a-brightMagenta);
-    cursor: pointer;
-    font-weight: bold;
 
     &:focus {
         text-decoration: underline;     
