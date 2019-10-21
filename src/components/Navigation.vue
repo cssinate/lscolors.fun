@@ -1,8 +1,11 @@
 <template>
-  <nav class="mainNav">
+  <nav class="nav">
     <a v-for="link in navItems"
             :key="link.short"
             @click="setActiveNav(link.short)"
+            @keydown.space="setActiveNav(link.short)"
+            @keydown.enter="setActiveNav(link.short)"
+            :tabindex="value === link.short ? -1 : 0"
             :class="{ active: value === link.short }">{{link.name}}</a>
   </nav>
 </template>
@@ -45,30 +48,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-  nav {
-    display: flex;
-    flex-direction: column;
-  }
-
-  button {
-    white-space: nowrap;
-    cursor: pointer;
-    color: var(--a-yellow);
-
-    &:focus {
-      text-decoration: underline;
-      outline: 0;
-    }
-  }
-
-  .active {
-    font-weight: bold;
-    color: var(--a-brightYellow);
-  }
-
-  span {
-    font-weight: bold;
-  }
-</style>

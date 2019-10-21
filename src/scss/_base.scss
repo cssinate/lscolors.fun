@@ -43,5 +43,17 @@ abbr {
 }
 
 a {
-  color: var(--p-link);
+  color: var(--a-brightYellow);
+}
+
+code {
+  color: var(--a-brightMagenta);
+}
+
+::selection {
+  background: var(--a-blue);
+}
+
+button {
+  line-height: 1.5;
 }

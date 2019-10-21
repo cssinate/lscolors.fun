@@ -8,8 +8,7 @@
       :key="index"
       :class="{
         active: result.code == currentlyEditing.code && isScheme,
-        isButton: isScheme,
-        changed: isChanged
+        isButton: isScheme
       }"
       class="inode"
       @click="emitEditing(result)"
@@ -18,10 +17,10 @@
       :data-bg="result.bg"
       :data-eff="result.eff"
       :ref="`inode-${result.code}`"
-      :is="isScheme ? 'button' : 'div'" >
-      {{result.short ? result.short : result.description}}
+      :is="isScheme ? 'button' : 'div'"
+      :title="changedCodes.includes(result.code) ? 'Modified from default' : ''" >
+      {{result.short ? result.short : result.description}}{{changedCodes.includes(result.code) ? '*' : ''}}
     </component>
-    {{changes}}
   </section>
 </template>
 
@@ -37,6 +36,7 @@ export default {
   },
   data: function () {
     return {
+      changedCodes: []
     }
   },
   methods: {
@@ -44,25 +44,18 @@ export default {
       if (this.isScheme) {
         this.$emit('edit-change', obj)
       }
-    },
+    }
   },
   mounted: function () {
     this.$nextTick(() => {
       this.$refs.terminal.style.setProperty('--inode-count', this.$parent.$data.inodes.length)
     })
   },
-  computed: {
-    isChanged: function () {
-      console.log(this)
-    }
-  },
   watch: {
     changes: function () {
-      let changedInodes = document.querySelectorAll('.inode.changed')
-      console.log(`entries:`, changedInodes.entries().next())
+      this.changedCodes = []
       this.changes.forEach(change => {
-        var inode = this.$refs[`inode-${change.code}`]
-
+        this.changedCodes.push(change.code)
       })
     }
   }
@@ -73,17 +66,11 @@ export default {
 @import '../scss/vars';
 
 .terminal {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: repeat(var(--inode-count), 1.5rem) 1fr;
-  grid-auto-flow: column;
-  line-height: 1;
+  min-width: 22ch;
 }
 
 .terminal > * {
-  grid-column: 1 / 2;
   white-space: nowrap;
-  align-self: center;
   user-select: none;
 }
 
@@ -92,11 +79,12 @@ export default {
   list-style: none;
   width: min-content;
   position: relative;
-  height: 1em;
   box-sizing: border-box;
-  line-height: 1em;
+  line-height: 1.5;
+  display: block;
+  margin-left: 2ch;
 
-  &.isButton {
+  &button {
     cursor: pointer;
   }
 }
@@ -129,9 +117,8 @@ export default {
   background-color: var(--a-brightGreen);
 }
 
-.changed::after {
+.changed::before {
   content: '*'
-
 }
 
 @keyframes blink {

@@ -20,6 +20,10 @@
     justify-content: center;
     box-sizing: content-box;
 
+    &.default {
+        outline: dotted 3px var(--t-fg);
+    }
+
     &:focus-within {
         outline: dashed .25rem var(--t-fg);
     }
@@ -27,6 +31,7 @@
     &.selected {
         outline: solid .25rem var(--t-fg);
     }
+    
 }
 
 .fg.style-tile--none {

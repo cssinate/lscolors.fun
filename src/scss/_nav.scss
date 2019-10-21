@@ -1,0 +1,27 @@
+.nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav a {
+    color: var(--a-brightYellow);
+    font-weight: bold;
+    margin-left: 3ch;
+    position: relative;
+}
+
+.nav a.active {
+    font-weight: bold;
+    color: var(--a-brightYellow);
+}
+
+.nav a:focus {
+    text-decoration: underline;
+    outline: 0;
+}
+
+.nav a.active::before {
+    content: ">>";
+    position: absolute;
+    right: calc(100% + 1ch);
+}
