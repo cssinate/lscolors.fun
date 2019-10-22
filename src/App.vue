@@ -32,11 +32,12 @@
 
       <set-theme
         class="panel panel--theme"
-        @theme-change="checkForThemeChanges($event)"
+        @new-change="currentThemeChange = $event"
         v-if="activeNav === 'theme'" />
 
       <export
-        v-if="activeNav === 'export'"
+        v-show="activeNav === 'export'"
+        :theme-change="currentThemeChange"
         :scheme-changes="schemeChanges" />
 
     </main>
@@ -54,7 +55,6 @@ import SetTheme from './components/SetTheme'
 import Export from './components/Export'
 
 import { inodes as results } from './mixins/inodes.js'
-import { themeProps } from './mixins/themeProperties.js'
 
 export default {
   name: 'app',
@@ -76,7 +76,7 @@ export default {
       currentScheme: {},
       currentDefaults: {},
       schemeChanges: [],
-      themeValues: []
+      currentThemeChange: {}
     }
   },
   watch: {
@@ -91,14 +91,14 @@ export default {
         var original = this.currentDefaults
         var code = original.code
         var find = this.schemeChanges.find(obj => { return obj.code === code })
-        if (copy[area] != original[area]) {
+        if (copy[area] !== original[area]) {
           var obj
           var push
           if (find) {
             obj = find
             push = false
           } else {
-            obj = new Object()
+            obj = {}
             push = true
           }
           obj.code = code
@@ -124,13 +124,6 @@ export default {
     })
     this.currentScheme = this.inodes[0]
     this.currentDefaults = this.inodesDefault[0]
-
-    themeProps.forEach(color => {
-      var themeSetting = new Object
-      themeSetting.name = color.name
-      themeSetting.hex = color.hex
-      this.themeValues.push(themeSetting)
-    })
   }
 }
 </script>

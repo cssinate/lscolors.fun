@@ -18,34 +18,39 @@
           {{ terminal }}
         </a>
       </nav>
-      <div class="export" ref="schemeExport" @click="selectText()">{{themeExport}}</div>
+      <div class="export" ref="schemeExport" @click="selectText()">
+        <component :is="exportingThemeTo" />
+      </div>
     </section>
   </div>
 </template>
 
 <script>
-import { themeProps } from '../mixins/themeProperties.js'
+import { themeProps } from '../mixins/themeProperties'
+import terminalMixin from '../mixins/terminal'
 
 export default {
   props: {
     schemeChanges: Array,
-    themeColors: Array
+    themeChange: Object
   },
+  mixins: [terminalMixin],
   data: function () {
     return {
-      exportingThemeTo: 'VSCode',
-      terminals: ['VSCode', 'Windows Terminal'],
+      exportingThemeTo: '',
       terminalColors: [],
       ansiColors: []
     }
   },
   mounted: function () {
-    themeProps.forEach(prop => {
+    this.exportingThemeTo = this.terminals[0]
+    this.$nextTick(() => {themeProps.forEach(prop => {
       if (prop.prefix === 't') {
-        this.terminalColors.push(prop.name)
-      } else {
-        this.ansiColors.push(prop.name)
-      }
+          this.terminalColors.push({ name: prop.name, hex: prop.hex })
+        } else {
+          this.ansiColors.push({ name: prop.name, hex: prop.hex })
+        }
+      })
     })
   },
   computed: {
@@ -57,9 +62,6 @@ export default {
         schemeStyles.push(schemeStyle)
       })
       return schemeStyles.join(':')
-    },
-    themeExport: function () {
-
     }
   },
   methods: {
@@ -81,6 +83,25 @@ export default {
       range.selectNode(this.$refs.schemeExport)
       window.getSelection().removeAllRanges()
       window.getSelection().addRange(range)
+    },
+    checkAnsi (name) {
+      return this.ansiColors.find( ({colorName}) => colorName === color)
+    },
+    checkTerm (name) {
+      return this.terminalColors.find( ({colorName}) => colorName === color)
+    }
+  },
+  watch: {
+    themeChange:
+      function () {
+        if (this.themeChange.area === 'a') {
+          let objToUpdate = this.ansiColors.find( ({name}) => name === this.themeChange.name)
+          console.log(objToUpdate)
+          objToUpdate.hex = this.themeChange.color
+        } else {
+          let objToUpdate = this.terminalColors.find( ({name}) => name === this.themeChange.name)
+          objToUpdate.hex = this.themeChange.color
+        }
     }
   }
 }

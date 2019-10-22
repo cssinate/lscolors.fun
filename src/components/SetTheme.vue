@@ -91,8 +91,7 @@ export default {
         }
         this.returnToDefault = false
       }
-      var appValue = this.$parent.themeValues.find(({ name }) => name === this.currentlyEditing.name)
-      appValue.hex = currentColor
+      this.$emit('new-change', {area: this.currentlyEditing.prefix, name: this.currentlyEditing.name, color: this.currentColor})
     }
   },
   computed: {
@@ -111,6 +110,11 @@ export default {
           this.getChangedThemeColors()
         })
       }
+    }
+  },
+  watch: {
+    currentColor: function () {
+
     }
   }
 }

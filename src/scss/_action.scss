@@ -15,7 +15,8 @@
     }
 
     &:focus {
-        text-decoration: underline;     
+        text-decoration: underline;
+        outline: 0;
     }
 
 }
