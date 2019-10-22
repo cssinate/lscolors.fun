@@ -1,6 +1,6 @@
 <template>
   <header>
-    <pre role="presentation"><span v-html="headerContent[0]"></span></pre>
+    <pre role="presentation" v-html="headerContent[0]"></pre>
     <pre>Color schemes and themes for LS_COLORS and your favourite terminal!</pre>
     <h1 class="sr-only">LSCOLORS.FUN</h1>
   </header>
@@ -53,6 +53,7 @@ pre:first-of-type {
   font-size: .7em;
   padding-bottom: 1em;
   line-height: 1;
+  animation: colorshift 500s linear infinite;
 }
 
 pre:last-of-type {
@@ -68,5 +69,14 @@ pre:last-of-type {
 /deep/ .header-outline {
   color: var(--a-cyan);
   font-weight: bold;
+}
+
+@keyframes colorshift {
+  from {
+    filter: hue-rotate(0deg)
+  }
+  to {
+    filter: hue-rotate(360deg)
+  }
 }
 </style>

@@ -7,11 +7,12 @@
       v-for="(result, index) in $parent.$data.inodes"
       :key="index"
       :class="{
-        active: result.code == currentlyEditing.code && isScheme,
-        isButton: isScheme
+        active: result.code == currentlyEditing.code && isScheme
       }"
       class="inode"
       @click="emitEditing(result)"
+      @keydown.down="nextNode($event, index)"
+      @keydown.up="previousNode($event, index)"
       :id="`b-${result.code}`"
       :data-fg="result.fg"
       :data-bg="result.bg"
@@ -20,6 +21,7 @@
       :is="isScheme ? 'button' : 'div'"
       :title="changedCodes.includes(result.code) ? 'Modified from default' : ''" >
       {{result.short ? result.short : result.description}}{{changedCodes.includes(result.code) ? '*' : ''}}
+
     </component>
   </section>
 </template>
@@ -43,6 +45,18 @@ export default {
     emitEditing (obj) {
       if (this.isScheme) {
         this.$emit('edit-change', obj)
+      }
+    },
+    previousNode (event, index) {
+      if (event.target.previousElementSibling) {
+        event.target.previousElementSibling.focus()
+        this.emitEditing(this.$parent.$data.inodes[index - 1])
+      }
+    },
+    nextNode (event, index) {
+      if (event.target.nextElementSibling) {
+        event.target.nextElementSibling.focus()
+        this.emitEditing(this.$parent.$data.inodes[index + 1])
       }
     }
   },
@@ -76,17 +90,16 @@ export default {
 
 .inode {
   color: var(--t-fg);
-  list-style: none;
   width: min-content;
   position: relative;
   box-sizing: border-box;
   line-height: 1.5;
   display: block;
   margin-left: 2ch;
+}
 
-  &button {
-    cursor: pointer;
-  }
+button.inode {
+  cursor: pointer;
 }
 
 [data-eff="01"] {

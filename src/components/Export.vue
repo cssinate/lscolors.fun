@@ -1,24 +1,31 @@
 <template>
-  <div style="display: contents;">
+  <div>
+    <h2>Export to bash</h2>
     <section v-if="schemeChanges.length">
-      <h2>Export to bash</h2>
       <p>Copy the following string, and paste it into the file <code>~/.bash_profile</code></p>
       <div class="export" ref="schemeExport" @click="selectScheme()">LS_COLORS="{{groupedSchemeStyles}}"</div>
     </section>
     <section v-else>
-      <h2>Export to bash</h2>
       <p>You made no changes to your color scheme. There's nothing to export.</p>
     </section>
+    <h2>Export to terminal</h2>
     <section>
       <nav class="nav">
-        <a>VSCode</a>
-        <a>Windows Terminal</a>
+        <a v-for="(terminal, index) in terminals"
+           :key="index"
+           :class="{active: exportingThemeTo === terminal}"
+           @click="exportingThemeTo = terminal">
+          {{ terminal }}
+        </a>
       </nav>
+      <div class="export" ref="schemeExport" @click="selectText()">{{themeExport}}</div>
     </section>
   </div>
 </template>
 
 <script>
+import { themeProps } from '../mixins/themeProperties.js'
+
 export default {
   props: {
     schemeChanges: Array,
@@ -26,8 +33,20 @@ export default {
   },
   data: function () {
     return {
-      exportingThemeTo: 'VSCode'
+      exportingThemeTo: 'VSCode',
+      terminals: ['VSCode', 'Windows Terminal'],
+      terminalColors: [],
+      ansiColors: []
     }
+  },
+  mounted: function () {
+    themeProps.forEach(prop => {
+      if (prop.prefix === 't') {
+        this.terminalColors.push(prop.name)
+      } else {
+        this.ansiColors.push(prop.name)
+      }
+    })
   },
   computed: {
     groupedSchemeStyles: function () {
@@ -38,9 +57,6 @@ export default {
         schemeStyles.push(schemeStyle)
       })
       return schemeStyles.join(':')
-    },
-    themeExport: function () {
-
     }
   },
   methods: {
@@ -57,7 +73,7 @@ export default {
       }
       return styles.join(';')
     },
-    selectScheme () {
+    selectText () {
       var range = document.createRange()
       range.selectNode(this.$refs.schemeExport)
       window.getSelection().removeAllRanges()
