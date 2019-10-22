@@ -21,7 +21,6 @@
       :is="isScheme ? 'button' : 'div'"
       :title="changedCodes.includes(result.code) ? 'Modified from default' : ''" >
       {{result.short ? result.short : result.description}}{{changedCodes.includes(result.code) ? '*' : ''}}
-
     </component>
   </section>
 </template>

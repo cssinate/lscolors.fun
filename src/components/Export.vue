@@ -57,6 +57,9 @@ export default {
         schemeStyles.push(schemeStyle)
       })
       return schemeStyles.join(':')
+    },
+    themeExport: function () {
+
     }
   },
   methods: {
@@ -85,6 +88,14 @@ export default {
 
 <style>
 
+</style>
+
+<style scoped>
+.export {
+  margin: 1.5rem 0;
+  padding: 1rem 1ch;
+  border: solid 1px var(--t-fg);
+}
 </style>
 
 <style scoped>
