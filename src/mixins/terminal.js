@@ -7,14 +7,18 @@ export default {
     WindowsTerminal
   },
   computed: {
-    terminals: function () {
-      console.log(Object.getPrototypeOf(this.$options.components))
-      let terminalObjs = Object.keys(Object.getPrototypeOf(this.$options.components))
-      let terminalList = []
-      terminalObjs.forEach(terminal => {
-        terminalList.push(this.$options.components[terminal].data.name)
+    navItems () {
+      let components = Object.keys(Object.getPrototypeOf(this.$options.components))
+      let output = []
+      components.forEach(comp => {
+        output.push({ short: this.$options.components[comp].name, name: this.$options.components[comp].friendlyName })
       })
-      return terminalList
+      this.activeNav = output[0].short
+      return output
+    }
+  },
+  data () {
+    return {
     }
   }
 }

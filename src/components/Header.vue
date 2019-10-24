@@ -1,7 +1,7 @@
 <template>
   <header>
     <pre role="presentation" v-html="headerContent[0]"></pre>
-    <pre>Color schemes and themes for LS_COLORS and your favourite terminal!</pre>
+    <pre>Styles and color schemes for LS_COLORS and your favourite terminal!</pre>
     <h1 class="sr-only">LSCOLORS.FUN</h1>
   </header>
 </template>

@@ -55,7 +55,7 @@ export default {
     this.hueBar(24)
     this.whiteOverlay(12)
     this.blackOverlay(6)
-    this.$nextTick(() => {this.$refs.saturation.$el.focus()})
+    this.$nextTick(() => { this.$refs.saturation.$el.focus() })
   },
   methods: {
     childChange (data) {
@@ -122,7 +122,7 @@ export default {
         source: 'hsv'
       })
     },
-    hueLeft(fast) {
+    hueLeft (fast) {
       let speed
       fast ? speed = 20 : speed = 4
       if (this.colors.hsl.h > speed) {
@@ -132,7 +132,7 @@ export default {
       }
       this.updateVueColorHue()
     },
-    hueRight(fast) {
+    hueRight (fast) {
       let speed
       fast ? speed = 20 : speed = 4
       if (this.colors.hsl.h < (360 - speed)) {
@@ -142,9 +142,9 @@ export default {
       }
       this.updateVueColorHue()
     },
-    saturationLeft(fast) {
+    saturationLeft (fast) {
       let speed
-      fast ? speed = .15 : speed = .02
+      fast ? speed = 0.15 : speed = 0.02
       if (this.colors.hsv.s > speed) {
         this.colors.hsv.s = this.colors.hsv.s - speed
       } else {
@@ -152,9 +152,9 @@ export default {
       }
       this.updateVueColorSat()
     },
-    saturationRight(fast) {
+    saturationRight (fast) {
       let speed
-      fast ? speed = .15 : speed = .02
+      fast ? speed = 0.15 : speed = 0.02
       if (this.colors.hsv.s < (1 - speed)) {
         this.colors.hsv.s = this.colors.hsv.s + speed
       } else {
@@ -162,9 +162,9 @@ export default {
       }
       this.updateVueColorSat()
     },
-    saturationUp(fast) {
+    saturationUp (fast) {
       let speed
-      fast ? speed = .15 : speed = .02
+      fast ? speed = 0.15 : speed = 0.02
       if (this.colors.hsv.v < (1 - speed)) {
         this.colors.hsv.v = this.colors.hsv.v + speed
       } else {
@@ -172,9 +172,9 @@ export default {
       }
       this.updateVueColorSat()
     },
-    saturationDown(fast) {
+    saturationDown (fast) {
       let speed
-      fast ? speed = .15 : speed = .02
+      fast ? speed = 0.15 : speed = 0.02
       if (this.colors.hsv.v > speed) {
         this.colors.hsv.v = this.colors.hsv.v - speed
       } else {

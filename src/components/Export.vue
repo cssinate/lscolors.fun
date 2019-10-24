@@ -10,47 +10,40 @@
     </section>
     <h2>Export to terminal</h2>
     <section>
-      <nav class="nav">
-        <a v-for="(terminal, index) in terminals"
-           :key="index"
-           :class="{active: exportingThemeTo === terminal}"
-           @click="exportingThemeTo = terminal">
-          {{ terminal }}
-        </a>
-      </nav>
-      <div class="export" ref="schemeExport" @click="selectText()">
-        <component :is="exportingThemeTo" />
-      </div>
+      <navigation
+        :nav-items="navItems"
+        v-model="activeNav" />
+      <component :is="activeNav" v-if="activeNav !== ''" />
     </section>
   </div>
 </template>
 
 <script>
 import { themeProps } from '../mixins/themeProperties'
+import Navigation from './Navigation'
 import terminalMixin from '../mixins/terminal'
 
 export default {
+  mixins: [terminalMixin],
+  components: {Navigation},
   props: {
     schemeChanges: Array,
     themeChange: Object
   },
-  mixins: [terminalMixin],
   data: function () {
     return {
-      exportingThemeTo: '',
       terminalColors: [],
-      ansiColors: []
+      ansiColors: [],
+      activeNav: ''
     }
   },
   mounted: function () {
-    this.exportingThemeTo = this.terminals[0]
-    this.$nextTick(() => {themeProps.forEach(prop => {
+    themeProps.forEach(prop => {
       if (prop.prefix === 't') {
-          this.terminalColors.push({ name: prop.name, hex: prop.hex })
-        } else {
-          this.ansiColors.push({ name: prop.name, hex: prop.hex })
-        }
-      })
+        this.terminalColors.push({ name: prop.name, hex: prop.hex })
+      } else {
+        this.ansiColors.push({ name: prop.name, hex: prop.hex })
+      }
     })
   },
   computed: {
@@ -85,44 +78,24 @@ export default {
       window.getSelection().addRange(range)
     },
     checkAnsi (name) {
-      return this.ansiColors.find( ({colorName}) => colorName === color)
+      return this.ansiColors.find(({ colorName }) => colorName === name)
     },
     checkTerm (name) {
-      return this.terminalColors.find( ({colorName}) => colorName === color)
+      return this.terminalColors.find(({ colorName }) => colorName === name)
     }
   },
   watch: {
     themeChange:
       function () {
         if (this.themeChange.area === 'a') {
-          let objToUpdate = this.ansiColors.find( ({name}) => name === this.themeChange.name)
+          let objToUpdate = this.ansiColors.find(({ name }) => name === this.themeChange.name)
           console.log(objToUpdate)
           objToUpdate.hex = this.themeChange.color
         } else {
-          let objToUpdate = this.terminalColors.find( ({name}) => name === this.themeChange.name)
+          let objToUpdate = this.terminalColors.find(({ name }) => name === this.themeChange.name)
           objToUpdate.hex = this.themeChange.color
         }
-    }
+      }
   }
 }
 </script>
-
-<style>
-
-</style>
-
-<style scoped>
-.export {
-  margin: 1.5rem 0;
-  padding: 1rem 1ch;
-  border: solid 1px var(--t-fg);
-}
-</style>
-
-<style scoped>
-.export {
-  margin: 1.5rem 0;
-  padding: 1rem 1ch;
-  border: solid 1px var(--t-fg);
-}
-</style>

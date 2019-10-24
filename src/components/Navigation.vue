@@ -13,29 +13,12 @@
 <script>
 export default {
   props: {
-    value: String
+    value: String,
+    navItems: Array
   },
   data: function () {
     return {
-      activeNav: this.value,
-      navItems: [
-        {
-          name: 'Introduction',
-          short: 'intro'
-        },
-        {
-          name: 'Set Scheme',
-          short: 'scheme'
-        },
-        {
-          name: 'Set Theme',
-          short: 'theme'
-        },
-        {
-          name: 'Export',
-          short: 'export'
-        }
-      ]
+      activeNav: this.value
     }
   },
   methods: {
@@ -44,7 +27,5 @@ export default {
       this.$emit('input', item)
     }
   },
-  mounted: function () {
-  }
 }
 </script>

@@ -6,6 +6,7 @@
     <main class="content">
 
       <navigation
+        :nav-items="navItems"
         v-model="activeNav" />
 
       <introduction
@@ -71,6 +72,24 @@ export default {
   data: function () {
     return {
       activeNav: 'intro',
+      navItems: [
+        {
+          name: 'Introduction',
+          short: 'intro'
+        },
+        {
+          name: 'Set Scheme',
+          short: 'scheme'
+        },
+        {
+          name: 'Set Theme',
+          short: 'theme'
+        },
+        {
+          name: 'Export',
+          short: 'export'
+        }
+      ],
       inodes: JSON.parse(JSON.stringify(results)),
       inodesDefault: results,
       currentScheme: {},

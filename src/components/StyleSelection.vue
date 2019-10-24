@@ -86,13 +86,13 @@ export default {
       }
     },
     moveUp (value) {
-      if (value >= 90 && value < 110 && value != 100) {
+      if (value >= 90 && value < 110 && value !== 100) {
         document.querySelector(`[data-output="${parseInt(value) - 60}"] input`).focus()
-      } else if (value == 100) {
+      } else if (value === 100) {
         document.querySelector(`.bg[data-output="0"] input`).focus()
       } else if (value > 40 && value < 50) {
         document.querySelector(`[data-output="${parseInt(value) + 49}"] input`).focus()
-      } else if (value == '00' || value === '01') {
+      } else if (value === '00' || value === '01') {
         document.querySelector(`[data-output="${parseInt(value) + 100}"] input`).focus()
       } else if (value === '04') {
         document.querySelector(`[data-output="102"] input`).focus()
@@ -105,11 +105,11 @@ export default {
         document.querySelector(`[data-output="${parseInt(value) - 49}"] input`).focus()
       } else if ((value >= 40 && value < 50) || (value >= 30 && value < 40)) {
         document.querySelector(`[data-output="${parseInt(value) + 60}"] input`).focus()
-      } else if (value == 100) {
+      } else if (value === 100) {
         document.querySelector(`[data-output="00"] input`).focus()
-      } else if (value == 101) {
+      } else if (value === 101) {
         document.querySelector(`[data-output="01"] input`).focus()
-      } else if (value == 102) {
+      } else if (value === 102) {
         document.querySelector(`[data-output="04"] input`).focus()
       } else if (document.activeElement.closest('label').classList.contains('fg')) {
         document.querySelector('.bg[data-output="0"] input').focus()

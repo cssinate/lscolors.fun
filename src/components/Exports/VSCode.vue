@@ -5,14 +5,10 @@
 </template>
 
 <script>
-  export default {
-    name: 'VSCode',
-    data () {
-      return {
-        friendlyName: 'VSCode'
-      }
-    }
-  }
+export default {
+  name: 'VSCode',
+  friendlyName: 'VSCode'
+}
 </script>
 
 <style scoped>

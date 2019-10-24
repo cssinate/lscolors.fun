@@ -91,7 +91,7 @@ export default {
         }
         this.returnToDefault = false
       }
-      this.$emit('new-change', {area: this.currentlyEditing.prefix, name: this.currentlyEditing.name, color: this.currentColor})
+      this.$emit('new-change', { area: this.currentlyEditing.prefix, name: this.currentlyEditing.name, color: this.currentColor })
     }
   },
   computed: {
