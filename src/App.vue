@@ -109,6 +109,7 @@ export default {
           short: 'about'
         }
       ],
+      navIsHistory: false,
       inodes: JSON.parse(JSON.stringify(results)),
       inodesDefault: results,
       currentStyle: {},
@@ -118,12 +119,17 @@ export default {
     }
   },
   watch: {
-    currentStyle: function () {
+    currentStyle () {
       this.currentDefaults = this.inodesDefault[this.currentStyle.index]
+    },
+    activeNav () {
+      if (!this.navIsHistory) {
+        history.pushState({ url: this.activeNav }, null, this.activeNav )
+      }
     }
   },
   methods: {
-    checkForStyleChanges: function (area) {
+    checkForStyleChanges (area) {
       this.$nextTick(() => {
         var copy = this.currentStyle
         var original = this.currentDefaults
@@ -155,7 +161,7 @@ export default {
       })
     }
   },
-  mounted: function () {
+  mounted () {
     var inodeIndex = 0
     this.inodes.forEach(inode => {
       inode.index = inodeIndex
@@ -163,6 +169,21 @@ export default {
     })
     this.currentStyle = this.inodes[0]
     this.currentDefaults = this.inodesDefault[0]
+    this.$nextTick(function() {
+      let vue = this
+      window.onpopstate = function (event) {
+        console.log(vue.activeNav, event.state)
+        vue.navIsHistory = true
+        if (event.state && event.state.url) {
+          vue.activeNav = event.state.url
+        } else {
+          console.log(`Going to root`, vue.navIsHistory)
+          vue.activeNav = 'intro'
+          history.replaceState(null, null, null)
+        }
+        vue.navIsHistory = false
+      }
+    })
   }
 }
 </script>
@@ -175,6 +196,6 @@ export default {
   .content {
     display: flex;
     padding-right: 2ch;
-    width: max-content;
+    width: calc(100vw - 4ch);
   }
 </style>
