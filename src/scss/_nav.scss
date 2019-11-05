@@ -1,13 +1,11 @@
-.nav {
-    display: flex;
-    flex-direction: column;
-}
-
 .nav a {
+    white-space: nowrap;
     color: var(--a-brightYellow);
     font-weight: bold;
     margin-left: 3ch;
     position: relative;
+    display: block;
+    padding-right: 3ch;
 }
 
 .nav a.active {
@@ -24,4 +22,8 @@
     content: ">>";
     position: absolute;
     right: calc(100% + 1ch);
+}
+
+.nav--main {
+    // @include background(2);
 }

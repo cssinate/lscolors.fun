@@ -6,7 +6,7 @@ import './scss/main.scss'
 
 Vue.config.productionTip = false
 
-let currentScheme = ''
+// let currentStyle = ''
 
 Vue.directive('click-outside', {
   bind: function (el, binding, vnode) {

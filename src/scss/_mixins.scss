@@ -53,3 +53,31 @@
         background-color: $value;
     }
 }
+
+@mixin background($sides) {
+    $horizontal-stops: 42.5%, 57.5%;
+    $vertical-stops: 65%, 75%;
+    $vertical-divider-image: linear-gradient(to bottom, transparent 0%, transparent 66.6%, var(--t-bg) 66.6%, var(--t-bg) 100%), linear-gradient(to right, var(--t-bg) 0%, var(--t-bg) nth($horizontal-stops, 1), var(--a-brightMagenta) nth($horizontal-stops, 1), var(--a-brightMagenta) nth($horizontal-stops, 2), var(--t-bg) nth($horizontal-stops, 2), var(--t-bg) 100%);
+    $vertical-divider-right-position: 100% 0, 100% 0;
+    $vertical-divider-left-position: 0 0, 0 0;
+    $vertical-divider-size: 1ch 1.5rem, 1ch 1.5rem;
+    $vertical-divider-repeat: repeat-y, repeat-y;
+    @if $sides == 2 {
+        background-image: $vertical-divider-image;
+        background-position: $vertical-divider-right-position;
+        background-size: $vertical-divider-size;
+        background-repeat: $vertical-divider-repeat;
+    }
+    @if $sides == 4 {
+        background-image: $vertical-divider-image;
+        background-position: $vertical-divider-left-position;
+        background-size: $vertical-divider-size;
+        background-repeat: $vertical-divider-repeat;
+    }
+    @if $sides == 24 {
+        background-image: $vertical-divider-image, $vertical-divider-image;
+        background-position: $vertical-divider-left-position, $vertical-divider-right-position;
+        background-size: $vertical-divider-size, $vertical-divider-size;
+        background-repeat: $vertical-divider-repeat, $vertical-divider-repeat;
+    }
+}

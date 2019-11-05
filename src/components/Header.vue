@@ -1,7 +1,8 @@
 <template>
   <header>
-    <pre role="presentation" v-html="headerContent[0]"></pre>
-    <pre>Styles and color schemes for LS_COLORS and your favourite terminal!</pre>
+    <pre aria-hidden="true" v-html="headerContent[0]"></pre>
+    <!-- <pre aria-hidden="true" v-html=""></pre> -->
+    <pre>Styles and color styles for LS_COLORS and your favourite terminal!</pre>
     <h1 class="sr-only">LSCOLORS.FUN</h1>
   </header>
 </template>
@@ -40,9 +41,7 @@ export default {
 
 <style lang="scss" scoped>
 header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding-left: 3ch;
   background-color: var(--t-bg);
   padding-bottom: 1rem;
   grid-area: header;
@@ -50,7 +49,7 @@ header {
 }
 
 pre:first-of-type {
-  font-size: .7em;
+  font-size: calc(.6em + .125vmin);
   padding-bottom: 1em;
   line-height: 1;
   animation: colorshift 500s linear infinite;

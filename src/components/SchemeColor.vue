@@ -1,8 +1,8 @@
 <template>
-  <button class="themeSetColor"
+  <button class="schemeSetColor"
           @click="$emit('color-selected', {event: $event, index: index})">
-    <span class="themeSetColor_name">{{meta.friendly}}{{changed ? '*' : ''}}</span>
-    <div class="themeSetColor_preview" :style="`background-color: var(--${meta.prefix}-${meta.name})`"></div>
+    <div class="schemeSetColor_preview" :style="`background-color: var(--${meta.prefix}-${meta.name})`"></div>
+    <span class="schemeSetColor_name">{{meta.friendly}}{{changed ? '*' : ''}}</span>
   </button>
 </template>
 

@@ -18,6 +18,8 @@ body {
   color: var(--t-fg);
   // background-color: var(--t-fg);
   // color: var(--t-bg);
+  padding-left: 2ch;
+  margin-right: 2ch;
 }
 
 pre {
@@ -27,6 +29,10 @@ pre {
     Menlo,
     Courier,
     monospace;
+}
+
+p {
+  max-width: 70ch;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -47,7 +53,8 @@ a {
 }
 
 code {
-  color: var(--a-brightMagenta);
+  color: var(--a-cyan);
+  font-weight: bold;
 }
 
 ::selection {

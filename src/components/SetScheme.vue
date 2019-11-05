@@ -1,210 +1,121 @@
 <template>
-  <section>
-    <div
-      class="inode currentlyEditing"
-      :data-fg="currentlyEditing.fg"
-      :data-bg="currentlyEditing.bg"
-      :data-eff="currentlyEditing.eff">
-      {{currentlyEditing.description}}
+  <div>
+    <div>
+      <scheme-color
+        ref="schemeColor"
+        v-for="(color, index) in colorProperties"
+        :meta="color"
+        :key="index"
+        :index="index"
+        :changed="changedSchemeColors.includes(color.name)"
+        :title="changedSchemeColors.includes(color.name) ? 'Modified from default' : ''"
+        @color-selected="setEditingColor($event)"
+        v-show="!currentlyEditing || currentlyEditing['index'] === index" />
     </div>
-
-    <style-selection
-      area="Foreground"
-      v-model="currentlyEditing.fg"
-      :tiles="fgTiles"
-      :default="currentDefaults.fg" />
-
-    <style-selection
-      area="Background"
-      v-model="currentlyEditing.bg"
-      :tiles="bgTiles"
-      :default="currentDefaults.bg" />
-
-    <style-selection
-      area="Effect"
-      v-model="currentlyEditing.eff"
-      :tiles="effTiles"
-      :default="currentDefaults.eff" />
+    <color-picker v-model="currentColor" v-if="currentColor"/>
 
     <button
+      v-if="currentlyEditing"
       class="action"
-      @click="setToDefault()"
-      v-show="schemeChanges.length && currentIsChanged">
-      Reset to Default
+      @click="doneEditing()">
+        Save
     </button>
 
-    <aside v-if="!hideTip && isBold" style="width: 40ch;">
-      <h2>Note:</h2>
-      <p>When the Bold effect is applied, the Bright variant of the color is shown by the terminal.</p>
-      <button class="action" @click="hideTip = true">Don't show this tip again</button>
-    </aside>
-  </section>
+    <button
+      v-if="currentlyEditing && returnToDefault"
+      class="action"
+      @click="setToDefault()">
+        Reset to Default
+    </button>
+
+    <button
+      v-if="!currentlyEditing"
+      class="action"
+      @click="resetAllToDefault()"
+      style="margin-top: 1.5rem;">
+        Reset All to Default
+    </button>
+
+  </div>
 </template>
 
 <script>
-import StyleSelection from './StyleSelection'
+import ColorPicker from './ColorPicker'
+import SchemeColor from './SchemeColor'
+import { schemeProps } from '../mixins/schemeProperties.js'
 
 export default {
-  name: 'SetScheme',
-  props: {
-    currentlyEditing: Object,
-    currentDefaults: Object,
-    schemeChanges: {
-      type: Array,
-      required: true
-    }
-  },
   components: {
-    StyleSelection
+    SchemeColor,
+    ColorPicker
   },
   data () {
     return {
-      defaults: this.currentDefaults,
-      hideTip: false,
-      isBold: false,
-      fgTiles: [
-        { value: '0', name: 'None' },
-        { value: '30', name: 'Black' },
-        { value: '31', name: 'Red' },
-        { value: '32', name: 'Green' },
-        { value: '33', name: 'Yellow' },
-        { value: '34', name: 'Blue' },
-        { value: '35', name: 'Magenta' },
-        { value: '36', name: 'Cyan' },
-        { value: '37', name: 'White' },
-        { value: '90', name: 'Bright Black' },
-        { value: '91', name: 'Bright Red' },
-        { value: '92', name: 'Bright Green' },
-        { value: '93', name: 'Bright Yellow' },
-        { value: '94', name: 'Bright Blue' },
-        { value: '95', name: 'Bright Magenta' },
-        { value: '96', name: 'Bright Cyan' },
-        { value: '97', name: 'Bright White' }
-      ],
-      bgTiles: [
-        { value: '0', name: 'None' },
-        { value: '41', name: 'Red' },
-        { value: '42', name: 'Green' },
-        { value: '43', name: 'Yellow' },
-        { value: '44', name: 'Blue' },
-        { value: '45', name: 'Magenta' },
-        { value: '46', name: 'Cyan' },
-        { value: '47', name: 'White' },
-        { value: '100', name: 'Bright Black' },
-        { value: '101', name: 'Bright Red' },
-        { value: '102', name: 'Bright Green' },
-        { value: '103', name: 'Bright Yellow' },
-        { value: '104', name: 'Bright Blue' },
-        { value: '105', name: 'Bright Magenta' },
-        { value: '106', name: 'Bright Cyan' },
-        { value: '107', name: 'Bright White' }
-      ],
-      effTiles: [
-        { value: '00', name: 'None' },
-        { value: '01', name: 'Bold' },
-        { value: '04', name: 'Underline' }
-      ]
+      colorProperties: schemeProps,
+      currentlyEditing: null,
+      changedSchemeColors: [],
+      returnToDefault: false
+    }
+  },
+  methods: {
+    setEditingColor: function (data) {
+      this.currentlyEditing = this.colorProperties[data.index]
+      this.currentlyEditing['index'] = data.index
+      data.event.target.closest('button').setAttribute('tabindex', -1)
+    },
+    setToDefault: function () {
+      this.currentColor = this.colorProperties[this.currentlyEditing.index]
+    },
+    doneEditing: function () {
+      this.currentlyEditing = null
+      document.querySelector('.schemeSetColor[tabindex="-1"').removeAttribute('tabindex')
+    },
+    resetAllToDefault: function () {
+      this.$refs.schemeColor.forEach(color => {
+        document.documentElement.style.setProperty(`--${color.meta.prefix}-${color.meta.name}`, color.meta.hex)
+      })
+    },
+    getChangedSchemeColors: function () {
+      var colorObj = schemeProps.find(({ name }) => name === this.currentlyEditing.name)
+      var currentColor = this.currentColor
+      if (colorObj.hex !== currentColor) {
+        if (!this.changedSchemeColors.includes(colorObj.name)) {
+          this.changedSchemeColors.push(colorObj.name)
+        }
+        this.returnToDefault = true
+      } else {
+        if (this.changedSchemeColors.includes(colorObj.name)) {
+          this.changedSchemeColors = this.changedSchemeColors.filter(function (oldColor) {
+            return oldColor !== colorObj.name
+          })
+        }
+        this.returnToDefault = false
+      }
+      this.$emit('new-change', { area: this.currentlyEditing.prefix, name: this.currentlyEditing.name, color: this.currentColor })
     }
   },
   computed: {
-    currentFg: function () {
-      return this.currentlyEditing.fg
-    },
-    currentBg: function () {
-      return this.currentlyEditing.bg
-    },
-    currentEff: function () {
-      return this.currentlyEditing.eff
-    },
-    currentIsChanged: function () {
-      if (this.schemeChanges.find(({ code }) => code === this.currentlyEditing.code)) {
-        return true
-      } else {
-        return false
+    currentColor: {
+      cache: false,
+      get: function () {
+        if (this.currentlyEditing) {
+          return window.getComputedStyle(document.documentElement).getPropertyValue(`--${this.currentlyEditing.prefix}-${this.currentlyEditing.name}`).toLowerCase().trim()
+        } else {
+          return null
+        }
+      },
+      set: function (color) {
+        document.documentElement.style.setProperty(`--${this.currentlyEditing.prefix}-${this.currentlyEditing.name}`, color.hex.toLowerCase().trim())
+        this.$nextTick(() => {
+          this.getChangedSchemeColors()
+        })
       }
     }
   },
   watch: {
-    currentlyEditing: function () {
-      this.checkIfBold()
-    },
-    currentFg: function () {
-      this.checkIfBold()
-      this.$nextTick(() => this.$emit('scheme-change', 'fg'))
-    },
-    currentBg: function () {
-      this.$nextTick(() => this.$emit('scheme-change', 'bg'))
-    },
-    currentEff: function () {
-      this.$nextTick(() => this.$emit('scheme-change', 'eff'))
-    }
-  },
-  methods: {
-    checkIfBold () {
-      if (this.currentlyEditing) {
-        if (this.currentlyEditing.eff === '01' && this.currentlyEditing.fg >= 30 && this.currentlyEditing.fg < 38) {
-          this.isBold = true
-        } else {
-          this.isBold = false
-        }
-      } else {
-        this.isBold = false
-      }
-    },
-    setToDefault () {
-      this.currentlyEditing.fg = this.currentDefaults.fg
-      this.currentlyEditing.bg = this.currentDefaults.bg
-      this.currentlyEditing.eff = this.currentDefaults.eff
-    }
+    currentColor: function () {
 
+    }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-@import '../scss/vars';
-
-.currentlyEditing {
-  max-width: max-content;
-  margin-bottom: 1.5rem;
-}
-
-.change {
-  justify-self: center;
-  height: 1.5em;
-  width: 1.5em;
-  border: solid 1px var(--t-bg);
-
-  &.color[data-applied="0"] {
-    background-image: $clear;
-  }
-
-  &.eff[data-applied="00"]:after {
-    content: 'N';
-  }
-
-  &.eff[data-applied="01"]:after {
-    content: 'B';
-    font-weight: bold;
-  }
-
-  &.eff[data-applied="04"]:after {
-    content: 'U';
-    text-decoration: underline;
-  }
-
-  &:focus {
-    outline: solid 3px var(--t-bg);
-  }
-}
-
-[data-eff="01"] {
-  font-weight: bold;
-}
-
-[data-eff="04"] {
-  text-decoration: underline;
-}
-
-</style>

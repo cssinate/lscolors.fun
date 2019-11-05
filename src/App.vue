@@ -7,39 +7,46 @@
 
       <navigation
         :nav-items="navItems"
-        v-model="activeNav" />
+        v-model="activeNav"
+        class="nav--main" />
 
       <introduction
         class="panel"
         v-if="activeNav === 'intro'"
-        @go-to-scheme="activeNav = 'scheme'" />
+        @go-to-style="activeNav = 'style'" />
 
       <preview
         class="panel panel--preview"
-        @edit-change="currentScheme = $event"
-        :currently-editing="currentScheme"
-        :isScheme="activeNav === 'scheme'"
-        :changes="schemeChanges"
-        v-if="activeNav === 'scheme' || activeNav === 'theme'" />
+        @edit-change="currentStyle = $event"
+        :currently-editing="currentStyle"
+        :isStyle="activeNav === 'style'"
+        :changes="styleChanges"
+        v-if="activeNav === 'style' || activeNav === 'scheme' || activeNav === 'presets'" />
 
-      <scheme
+      <presets
+        v-if="activeNav === 'presets'" />
+
+      <Style
+        class="panel panel--style"
+        :currently-editing="currentStyle"
+        :current-defaults="inodesDefault[currentStyle.index]"
+        ref="setStyle"
+        :style-changes="styleChanges"
+        @style-change="checkForStyleChanges($event)"
+        v-if="activeNav === 'style' && currentStyle && inodesDefault[currentStyle.index]" />
+
+      <set-scheme
         class="panel panel--scheme"
-        :currently-editing="currentScheme"
-        :current-defaults="inodesDefault[currentScheme.index]"
-        ref="setScheme"
-        :scheme-changes="schemeChanges"
-        @scheme-change="checkForSchemeChanges($event)"
-        v-if="activeNav === 'scheme' && currentScheme && inodesDefault[currentScheme.index]" />
-
-      <set-theme
-        class="panel panel--theme"
-        @new-change="currentThemeChange = $event"
-        v-if="activeNav === 'theme'" />
+        @new-change="currentSchemeChange = $event"
+        v-if="activeNav === 'scheme'" />
 
       <export
         v-show="activeNav === 'export'"
-        :theme-change="currentThemeChange"
-        :scheme-changes="schemeChanges" />
+        :scheme-change="currentSchemeChange"
+        :style-changes="styleChanges" />
+
+      <about
+        v-if="activeNav ==='about'" />
 
     </main>
   </div>
@@ -50,10 +57,12 @@
 import Header from './components/Header.vue'
 import Navigation from './components/Navigation.vue'
 import Introduction from './components/Introduction.vue'
-import Scheme from './components/SetScheme'
 import Preview from './components/Preview'
-import SetTheme from './components/SetTheme'
+import Presets from './components/Presets.vue'
+import Style from './components/SetStyle'
+import SetScheme from './components/SetScheme'
 import Export from './components/Export'
+import About from './components/About'
 
 import { inodes as results } from './mixins/inodes.js'
 
@@ -64,10 +73,12 @@ export default {
     Header,
     Navigation,
     Introduction,
-    Scheme,
     Preview,
-    SetTheme,
-    Export
+    Presets,
+    Style,
+    SetScheme,
+    Export,
+    About
   },
   data: function () {
     return {
@@ -78,39 +89,48 @@ export default {
           short: 'intro'
         },
         {
+          name: 'Presets',
+          short: 'presets'
+        },
+        {
+          name: 'Set Style',
+          short: 'style'
+        },
+        {
           name: 'Set Scheme',
           short: 'scheme'
         },
         {
-          name: 'Set Theme',
-          short: 'theme'
-        },
-        {
           name: 'Export',
           short: 'export'
+        },
+        {
+          name: 'About',
+          short: 'about'
         }
       ],
       inodes: JSON.parse(JSON.stringify(results)),
       inodesDefault: results,
-      currentScheme: {},
+      currentStyle: {},
       currentDefaults: {},
-      schemeChanges: [],
-      currentThemeChange: {}
+      styleChanges: [],
+      currentSchemeChange: {}
     }
   },
   watch: {
-    currentScheme: function () {
-      this.currentDefaults = this.inodesDefault[this.currentScheme.index]
+    currentStyle: function () {
+      this.currentDefaults = this.inodesDefault[this.currentStyle.index]
     }
   },
   methods: {
-    checkForSchemeChanges: function (area) {
+    checkForStyleChanges: function (area) {
       this.$nextTick(() => {
-        var copy = this.currentScheme
+        var copy = this.currentStyle
         var original = this.currentDefaults
         var code = original.code
-        var find = this.schemeChanges.find(obj => { return obj.code === code })
-        if (copy[area] !== original[area]) {
+        var find = this.styleChanges.find(obj => { return obj.code === code })
+        /* eslint-disable-next-line */
+        if (copy[area] != original[area]) {
           var obj
           var push
           if (find) {
@@ -122,13 +142,13 @@ export default {
           }
           obj.code = code
           obj[area] = copy[area]
-          push && this.schemeChanges.push(obj)
+          push && this.styleChanges.push(obj)
         } else {
           if (find) {
             delete find[area]
             if (!find.fg && !find.bg && !find.eff) {
-              var index = this.schemeChanges.findIndex(o => { return o.code === code })
-              this.schemeChanges.splice(index, 1)
+              var index = this.styleChanges.findIndex(o => { return o.code === code })
+              this.styleChanges.splice(index, 1)
             }
           }
         }
@@ -141,7 +161,7 @@ export default {
       inode.index = inodeIndex
       inodeIndex++
     })
-    this.currentScheme = this.inodes[0]
+    this.currentStyle = this.inodes[0]
     this.currentDefaults = this.inodesDefault[0]
   }
 }
@@ -154,5 +174,7 @@ export default {
 
   .content {
     display: flex;
+    padding-right: 2ch;
+    width: max-content;
   }
 </style>

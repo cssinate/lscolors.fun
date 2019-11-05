@@ -27,15 +27,16 @@
         @change="childChange"
         tabindex="0"/>
     </div>
+    <editable-input label="#" :value="hex" @change="inputChange" ref="hexInput" />
   </div>
 </template>
 
 <script>
-import { Saturation, ColorMixin, Hue } from 'vue-color'
+import { Saturation, ColorMixin, Hue, EditableInput } from 'vue-color'
 
 export default {
   name: 'ColorPicker',
-  components: { Saturation, Hue },
+  components: { Saturation, Hue, EditableInput },
   mixins: [ColorMixin],
   data () {
     return {
@@ -56,10 +57,32 @@ export default {
     this.whiteOverlay(12)
     this.blackOverlay(6)
     this.$nextTick(() => { this.$refs.saturation.$el.focus() })
+    let hexInput = this.$refs.hexInput.$el.querySelector('input')
+    hexInput.setAttribute('maxlength', 6)
+    hexInput.setAttribute('pattern', '[a-fA-F\\d]+')
+    let comp = this
+    this.$nextTick(function () {
+      hexInput.addEventListener('blur', function () {
+        if (!comp.isValidHex(this.value['#'])) {
+          this.value = comp.colors.hex.replace('#', '')
+        }
+      }, false)
+    })
   },
   methods: {
     childChange (data) {
       this.colorChange(data)
+    },
+    inputChange (data) {
+      if (!data) {
+        return
+      }
+      if (data['#']) {
+        this.isValidHex(data['#']) && this.colorChange({
+          hex: data['#'],
+          source: 'hex'
+        })
+      }
     },
     clickCurrentColor () {
       this.colorChange({
@@ -199,7 +222,7 @@ export default {
   position: relative;
   height: 1rem;
   width: 100%;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 /deep/ .vc-hue-picker,
@@ -249,5 +272,27 @@ export default {
 
 /deep/ .vc-saturation--black {
   background-image: linear-gradient(to bottom, var(--steppedBlack)) !important;
+}
+
+/deep/ .vc-editable-input {
+  display: flex;
+  margin-bottom: .5rem;
+
+  .vc-input__label {
+    order: 1;
+    margin-right: 1ch;
+  }
+
+  input {
+    order: 2;
+    width: 6ch;
+    border: 0;
+    background-color: var(--t-bg);
+    color: var(--t-fg);
+
+    &:invalid {
+      color: var(--a-brightRed)
+    }
+  }
 }
 </style>

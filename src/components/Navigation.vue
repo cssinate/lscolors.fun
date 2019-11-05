@@ -26,6 +26,6 @@ export default {
       this.activeNav = item
       this.$emit('input', item)
     }
-  },
+  }
 }
 </script>

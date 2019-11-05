@@ -1,11 +1,32 @@
 .export {
     margin: 1.5rem 0;
-    padding: 1rem 1ch;
+    padding: 1rem 2ch;
     border: solid 1px var(--t-fg);
+    max-width: 70ch;
+    box-sizing: border-box;
 }
 
-.export_prompt {
-    
+.export_bash .export {
+  white-space: pre-wrap;
+}
+
+.export_prompt .export, .export.export_prompt {
+  &:focus-within::after {
+    content: '_';
+    animation: blink 1.5s steps(2, jump-none) infinite;
+    color: var(--a-brightGreen);
+    font-weight: bold;
+    text-decoration: underline;
+    text-shadow: 0 1px 0 currentColor, 0 -1px 0 currentColor;
+  }
+
+  input {
+    background: transparent;
+    border: transparent;
+    color: var(--t-fg);
+    caret-color: var(--t-bg);
+    margin-left: 1ch;
+  }
     label {
         background: transparent;
         color: var(--t-fg);
@@ -14,15 +35,7 @@
         height: 1rem;
         padding: 0;
         min-width: 20ch;
-
-        &:focus-within::after {
-            content: '_';
-            animation: blink 1.5s steps(2, jump-none) infinite;
-            color: var(--a-brightGreen);
-            font-weight: bold;
-            text-decoration: underline;
-            text-shadow: 0 1px 0 currentColor, 0 -1px 0 currentColor;
-          }
+        margin-left: 1ch;
     }
 }
 

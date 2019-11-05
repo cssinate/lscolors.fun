@@ -1,34 +1,38 @@
 <template>
-  <div>
-    <h2>Export to bash</h2>
-    <section v-if="schemeChanges.length">
-      <p>Copy the following string, and paste it into the file <code>~/.bash_profile</code></p>
-      <div class="export" ref="schemeExport" @click="selectScheme()">LS_COLORS="{{groupedSchemeStyles}}"</div>
-    </section>
-    <section v-else>
-      <p>You made no changes to your color scheme. There's nothing to export.</p>
-    </section>
-    <h2>Export to terminal</h2>
-    <section>
+  <div class="panel panel--export">
+    <div class="panel--bash">
+      <h2>Export to bash</h2>
+      <section v-if="styleChanges.length" class="export_bash">
+        <p>Copy the following string, and paste it into the file <code>~/.bash_profile</code></p>
+        <pre class="export" ref="styleExport">LS_COLORS="{{groupedStyleStyles}}"</pre>
+      </section>
+      <section v-else class="export_bash">
+        <p>You made no changes to your color style. There's nothing to export.</p>
+      </section>
+    </div>
+    <div class="panel--terminal">
+      <h2>Export to terminal</h2>
       <navigation
         :nav-items="navItems"
         v-model="activeNav" />
-      <component :is="activeNav" v-if="activeNav !== ''" />
-    </section>
+      <keep-alive>
+        <component :is="activeNav" v-if="activeNav !== ''" :terminal-colors="terminalColors" :ansi-colors="ansiColors" />
+      </keep-alive>
+    </div>
   </div>
 </template>
 
 <script>
-import { themeProps } from '../mixins/themeProperties'
+import { schemeProps } from '../mixins/schemeProperties'
 import Navigation from './Navigation'
 import terminalMixin from '../mixins/terminal'
 
 export default {
   mixins: [terminalMixin],
-  components: {Navigation},
+  components: { Navigation },
   props: {
-    schemeChanges: Array,
-    themeChange: Object
+    styleChanges: Array,
+    schemeChange: Object
   },
   data: function () {
     return {
@@ -38,7 +42,7 @@ export default {
     }
   },
   mounted: function () {
-    themeProps.forEach(prop => {
+    schemeProps.forEach(prop => {
       if (prop.prefix === 't') {
         this.terminalColors.push({ name: prop.name, hex: prop.hex })
       } else {
@@ -47,14 +51,14 @@ export default {
     })
   },
   computed: {
-    groupedSchemeStyles: function () {
-      var schemeStyles = []
-      this.schemeChanges.forEach(change => {
-        var schemeStyle = ''
-        schemeStyle = `${change.code}=${this.applyChangeStyles(change)}`
-        schemeStyles.push(schemeStyle)
+    groupedStyleStyles: function () {
+      var styleStyles = []
+      this.styleChanges.forEach(change => {
+        var styleStyle = ''
+        styleStyle = `${change.code}=${this.applyChangeStyles(change)}`
+        styleStyles.push(styleStyle)
       })
-      return schemeStyles.join(':')
+      return styleStyles.join(':')
     }
   },
   methods: {
@@ -73,7 +77,7 @@ export default {
     },
     selectText () {
       var range = document.createRange()
-      range.selectNode(this.$refs.schemeExport)
+      range.selectNode(this.$refs.styleExport)
       window.getSelection().removeAllRanges()
       window.getSelection().addRange(range)
     },
@@ -85,17 +89,20 @@ export default {
     }
   },
   watch: {
-    themeChange:
+    schemeChange:
       function () {
-        if (this.themeChange.area === 'a') {
-          let objToUpdate = this.ansiColors.find(({ name }) => name === this.themeChange.name)
-          console.log(objToUpdate)
-          objToUpdate.hex = this.themeChange.color
+        if (this.schemeChange.area === 'a') {
+          let objToUpdate = this.ansiColors.find(({ name }) => name === this.schemeChange.name)
+          objToUpdate.hex = this.schemeChange.color
         } else {
-          let objToUpdate = this.terminalColors.find(({ name }) => name === this.themeChange.name)
-          objToUpdate.hex = this.themeChange.color
+          let objToUpdate = this.terminalColors.find(({ name }) => name === this.schemeChange.name)
+          objToUpdate.hex = this.schemeChange.color
         }
       }
   }
 }
 </script>
+
+<style>
+
+</style>

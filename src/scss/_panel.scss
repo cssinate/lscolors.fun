@@ -1,4 +1,67 @@
-.panel--theme {
+.panel {
+    padding-left: 3ch;
+    @include background(4);
+}
+
+.panel--scheme {
     width: 32ch;
     user-select: none;
+}
+
+.panel--bash {
+    margin-bottom: 1.5rem;
+}
+
+@media (min-width: 190ch) {
+    .panel--export {
+        display: contents;
+    }
+
+    .panel--bash, .panel--terminal {
+        flex-basis: 50%;
+    }
+
+    .panel--bash {
+        padding-right: 3ch;
+        padding-left: 3ch;
+        @include background(24);
+        margin-bottom: 0;
+    }
+
+    .panel--terminal {
+        padding-left: 3ch;
+    }
+}
+
+@media (min-width: 200ch) {
+
+  .panel--terminal {
+    // padding-left: 3ch;
+    display: grid;
+    grid-template-columns: auto 70ch;
+    grid-template-areas: "nav header" "nav content";
+    grid-auto-rows: min-content 1fr;
+    padding-left: 0;
+    
+    nav {
+      padding-left: 3ch;
+      order: -1;
+      grid-area: nav;
+      height: min-content;
+      grid-row: span 2;
+    }
+
+    h2 {
+      grid-area: header;
+      padding-left: 3ch;
+      @include background(4);
+    }
+
+    section {
+      grid-area: content;
+      padding-left: 3ch;
+      @include background(4);
+    }
+    
+  }
 }

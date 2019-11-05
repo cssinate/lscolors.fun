@@ -1,4 +1,4 @@
-export let themeProps = [
+export let schemeProps = [
   {
     id: 0,
     name: 'fg',

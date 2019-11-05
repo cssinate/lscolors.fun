@@ -9,7 +9,7 @@
 
     <p>This application helps you generate a <strong>SCHEME</strong> for files and folders, and a <strong>THEME</strong> for your terminal application.</p>
 
-    <button class="action" @click="goToScheme">Get Started</button>
+    <button class="action" @click="goToStyle">Get Started</button>
   </div>
 </template>
 
@@ -17,8 +17,8 @@
 export default {
   name: 'Introduction',
   methods: {
-    goToScheme: function () {
-      this.$emit('go-to-scheme')
+    goToStyle: function () {
+      this.$emit('go-to-style')
     }
   }
 }
